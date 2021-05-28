@@ -77,7 +77,23 @@ namespace IdentityStream.HttpMessageSigning {
 
             AdjustHeadersToInclude(config);
 
+            Validate(config);
+
             return config;
+        }
+
+        private static void Validate(HttpMessageSigningConfiguration config) {
+            if (string.IsNullOrEmpty(config.KeyId)) {
+                throw new InvalidOperationException($"{nameof(KeyId)} is required.");
+            }
+
+            if (config.SignatureAlgorithm is null) {
+                throw new InvalidOperationException($"{nameof(SignatureAlgorithm)} is required.");
+            }
+
+            if (config.GetUtcNow is null) {
+                throw new InvalidOperationException($"{nameof(GetUtcNow)} is required.");
+            }
         }
 
         private static void AdjustHeadersToInclude(HttpMessageSigningConfiguration config) {
