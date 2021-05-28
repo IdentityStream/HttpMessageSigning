@@ -75,7 +75,9 @@ namespace IdentityStream.HttpMessageSigning {
 
             configure?.Invoke(config);
 
-            AdjustHeadersToInclude(config);
+            if (config.AddRecommendedHeaders) {
+                EnsureRecommendedHeaders(config);
+            }
 
             Validate(config);
 
@@ -96,12 +98,7 @@ namespace IdentityStream.HttpMessageSigning {
             }
         }
 
-        private static void AdjustHeadersToInclude(HttpMessageSigningConfiguration config) {
-            // Chek if use has opted out of adding recommended headers.
-            if (!config.AddRecommendedHeaders) {
-                return;
-            }
-
+        private static void EnsureRecommendedHeaders(HttpMessageSigningConfiguration config) {
             // According to the spec, the (request-target) header should always be part of the signature string.
             config.HeadersToInclude.Add(HeaderNames.RequestTarget);
 

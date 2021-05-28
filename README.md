@@ -8,7 +8,7 @@ When hooking up HTTP message signing, there's a bunch of configuration options a
 
 | Option | Default | Description |
 |--------|-------------|---------|
-| `AddRecommendedHeaders` | `true` | Automatically adds recommended headers to `HeadersToInclude` based on the specification and configuration. |
+| `AddRecommendedHeaders` | `true` | Automatically adds recommended headers, such as `(request-target)`, `(created)`, `(expires)`, `Date` and `Digest` to `HeadersToInclude` based on the specification and configuration. |
 | `DigestAlgorithm` | None | If set, enables digest calculation of the request body. If `AddRecommendedHeaders` has been turned off, you also have to add `Digest` to `HeadersToInclude` in order to enable the digest calculation. |
 | `GetUtcNow` | `DateTimeOffset.UtcNow` | Gets the current UTC timestamp. Useful for testing. |
 | `HeadersToInclude` | Empty | A set of headers to include in the signature. |
@@ -19,9 +19,9 @@ When hooking up HTTP message signing, there's a bunch of configuration options a
 To use HTTP message signing with WCF, call `UseHttpMessageSigning` on your client endpoint:
 
 ```csharp
-var proxy = new /* your client proxy /*;
+var proxy = /* your client proxy */;
 
-var signatureAlgorithm = SignatureAlgorithm.Create(/* your RSA or ECDsa algorithm /*);
+var signatureAlgorithm = SignatureAlgorithm.Create(/* your RSA or ECDsa algorithm */);
 
 proxy.Endpoint.UseHttpMessageSigning("key-id", signatureAlgorithm);
 ```
