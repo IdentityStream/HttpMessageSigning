@@ -10,7 +10,7 @@ namespace IdentityStream.HttpMessageSigning {
         private HttpMessageSigningConfiguration(string keyId, ISignatureAlgorithm signatureAlgorithm) {
             KeyId = keyId;
             SignatureAlgorithm = signatureAlgorithm;
-            GetUtcNow = () => DateTimeOffset.UtcNow;
+            GetCurrentTimestamp = () => DateTimeOffset.UtcNow;
             HeadersToInclude = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
             AddRecommendedHeaders = true;
         }
@@ -35,7 +35,7 @@ namespace IdentityStream.HttpMessageSigning {
         /// <summary>
         /// Gets or sets the function to produce a timestamp. Useful for testing purposes.
         /// </summary>
-        public Func<DateTimeOffset> GetUtcNow { get; set; }
+        public Func<DateTimeOffset> GetCurrentTimestamp { get; set; }
 
         /// <summary>
         /// Gets or sets whether recommended headers should be automatically added to the signature.
@@ -93,8 +93,8 @@ namespace IdentityStream.HttpMessageSigning {
                 throw new InvalidOperationException($"{nameof(SignatureAlgorithm)} is required.");
             }
 
-            if (config.GetUtcNow is null) {
-                throw new InvalidOperationException($"{nameof(GetUtcNow)} is required.");
+            if (config.GetCurrentTimestamp is null) {
+                throw new InvalidOperationException($"{nameof(GetCurrentTimestamp)} is required.");
             }
         }
 

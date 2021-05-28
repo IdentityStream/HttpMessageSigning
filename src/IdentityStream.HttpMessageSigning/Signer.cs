@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace IdentityStream.HttpMessageSigning {
     internal static class Signer {
         public static async Task SignAsync(IHttpMessage message, HttpMessageSigningConfiguration config) {
-            var timestamp = config.GetUtcNow();
+            var timestamp = config.GetCurrentTimestamp();
 
             await AddRequiredHeaders(message, config, timestamp).ConfigureAwait(false);
 

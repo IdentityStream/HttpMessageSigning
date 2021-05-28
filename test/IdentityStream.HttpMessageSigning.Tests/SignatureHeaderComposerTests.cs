@@ -128,7 +128,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
         private static Task SignAsync(IHttpMessage message, Action<HttpMessageSigningConfiguration>? configure = null) {
             var signatureAlgorithm = new TestSignatureAlgorithm(HashAlgorithmName.SHA512);
             var config = HttpMessageSigningConfiguration.Create(KeyId, signatureAlgorithm, config => {
-                config.GetUtcNow = () => new DateTimeOffset(2021, 05, 27, 10, 23, 00, TimeSpan.Zero);
+                config.GetCurrentTimestamp = () => new DateTimeOffset(2021, 05, 27, 10, 23, 00, TimeSpan.Zero);
                 configure?.Invoke(config);
             });
             return Signer.SignAsync(message, config);
