@@ -1,6 +1,6 @@
 # HttpMessageSigning
 
-Implementation of [Signing HTTP Messages](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-12) for WCF and HttpClient.
+A .NET implementation of "[Signing HTTP Messages](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-12)" (Cavage, draft 12) for WCF and HttpClient.
 
 ## Usage
 

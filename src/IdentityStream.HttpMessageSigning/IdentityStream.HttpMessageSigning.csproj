@@ -17,6 +17,10 @@
     <MinVerDefaultPreReleasePhase>beta</MinVerDefaultPreReleasePhase>
     <MinVerTagPrefix>v</MinVerTagPrefix>
 
+    <Description>
+      A .NET implementation of "Signing HTTP Messages" (Cavage, draft 12) for WCF and HttpClient.
+    </Description>
+
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
