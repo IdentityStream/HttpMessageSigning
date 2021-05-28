@@ -16,7 +16,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
         public SignerTests() {
             Settings = new VerifySettings();
             Settings.UseDirectory("Snapshots");
-            Settings.UniqueForRuntime();
         }
 
         private VerifySettings Settings { get; }
