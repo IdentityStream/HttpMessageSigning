@@ -90,7 +90,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             get {
                 yield return new object[] { HashAlgorithmName.SHA1 };
                 yield return new object[] { HashAlgorithmName.SHA256 };
-                yield return new object[] { HashAlgorithmName.SHA384 };
                 yield return new object[] { HashAlgorithmName.SHA512 };
             }
         }

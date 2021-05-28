@@ -11,21 +11,30 @@ using System.Text;
 using System.Xml;
 
 namespace IdentityStream.HttpMessageSigning.ServiceModel {
+    /// <summary>
+    /// A WCF message inspector that signs HTTP requests before they're sent.
+    /// </summary>
     public class HttpMessageSigningMessageInspector : IClientMessageInspector {
         private static readonly XmlWriterSettings Settings = new XmlWriterSettings {
             Encoding = Encoding.UTF8
         };
 
+        /// <summary>
+        /// Creates a new inspector instance using the specified <paramref name="config"/>.
+        /// </summary>
+        /// <param name="config">The configuration to use when signing HTTP messages.</param>
         public HttpMessageSigningMessageInspector(HttpMessageSigningConfiguration config) {
             Config = config;
         }
 
         private HttpMessageSigningConfiguration Config { get; }
 
+        /// <inheritdoc/>
         public void AfterReceiveReply(ref Message reply, object correlationState) {
             // No implementation necessary.
         }
 
+        /// <inheritdoc/>
         public object? BeforeSendRequest(ref Message request, IClientChannel channel) {
             var httpRequest = GetHttpRequestProperty(request);
             if (httpRequest is null) {

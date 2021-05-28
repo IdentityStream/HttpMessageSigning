@@ -12,7 +12,7 @@ namespace IdentityStream.HttpMessageSigning {
             builder.Append(config.KeyId);
 
             builder.Append(",algorithm=");
-            builder.Append(GetAlgorithmName(config.SignatureAlgorithm));
+            builder.Append(config.SignatureAlgorithm.GetAlgorithmName());
 
             builder.Append(",created=");
             builder.Append(timestamp.ToUnixTimeSeconds().ToString());
@@ -31,12 +31,6 @@ namespace IdentityStream.HttpMessageSigning {
             builder.Append(signatureString);
 
             return builder.ToString();
-        }
-
-        private static string GetAlgorithmName(ISignatureAlgorithm signatureAlgorithm) {
-            var signatureAlgorithmName = signatureAlgorithm.Name.ToLowerInvariant();
-            var hashAlgorithmName = signatureAlgorithm.HashAlgorithm.Name.ToLowerInvariant();
-            return $"{signatureAlgorithmName}-{hashAlgorithmName}";
         }
 
         private static StringBuilder AppendJoin<T>(this StringBuilder builder, string separator, IEnumerable<T> values) =>
