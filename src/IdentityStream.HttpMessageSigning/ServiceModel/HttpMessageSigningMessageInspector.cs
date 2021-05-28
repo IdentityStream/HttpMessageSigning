@@ -1,0 +1,122 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Dispatcher;
+using System.Text;
+using System.Xml;
+
+namespace IdentityStream.HttpMessageSigning.ServiceModel {
+    public class HttpMessageSigningMessageInspector : IClientMessageInspector {
+        private static readonly XmlWriterSettings Settings = new XmlWriterSettings {
+            Encoding = Encoding.UTF8
+        };
+
+        public HttpMessageSigningMessageInspector(HttpMessageSigningConfiguration config) {
+            Config = config;
+        }
+
+        private HttpMessageSigningConfiguration Config { get; }
+
+        public void AfterReceiveReply(ref Message reply, object correlationState) {
+            // No implementation necessary.
+        }
+
+        public object? BeforeSendRequest(ref Message request, IClientChannel channel) {
+            var httpRequest = GetHttpRequestProperty(request);
+            if (httpRequest is null) {
+                return null;
+            }
+
+            var httpMessage = CreateHttpMessage(httpRequest, channel, Config, ref request);
+
+            Signer.SignAsync(httpMessage, Config).GetAwaiter().GetResult(); // Ugh :(
+
+            return null;
+        }
+
+        private static IHttpMessage CreateHttpMessage(HttpRequestMessageProperty httpRequest, IClientChannel channel, HttpMessageSigningConfiguration config, ref Message request) {
+            var method = new HttpMethod(httpRequest.Method);
+            var requestUri = channel.RemoteAddress.Uri;
+            var content = default(HttpContent?);
+
+            if (config.DigestAlgorithm.HasValue) {
+                var requestBody = ReadRequestBody(ref request);
+                content = new ByteArrayContent(requestBody);
+            }
+
+            return new WcfHttpRequestMessage(method, requestUri, content, httpRequest.Headers);
+        }
+
+        private static byte[] ReadRequestBody(ref Message message) {
+            var stream = new MemoryStream();
+            var writer = XmlWriter.Create(stream, Settings);
+
+            var buffer = message.CreateBufferedCopy(int.MaxValue);
+
+            message = buffer.CreateMessage();
+
+            message.WriteMessage(writer);
+
+            message = buffer.CreateMessage();
+
+            writer.Flush();
+            stream.Flush();
+
+            return stream.ToArray();
+        }
+
+        private static HttpRequestMessageProperty? GetHttpRequestProperty(Message request) {
+            if (request.Properties.TryGetValue(HttpRequestMessageProperty.Name, out var property) && property is HttpRequestMessageProperty httpRequest) {
+                return httpRequest;
+            }
+
+            httpRequest = new HttpRequestMessageProperty();
+            request.Properties[HttpRequestMessageProperty.Name] = httpRequest;
+            return httpRequest;
+        }
+
+        private class WcfHttpRequestMessage : IHttpMessage {
+            private static readonly char[] SplitValues = new char[] { ',' };
+
+            public WcfHttpRequestMessage(HttpMethod method, Uri requestUri, HttpContent? content, WebHeaderCollection headers) {
+                Method = method;
+                RequestUri = requestUri;
+                Content = content;
+                Headers = headers;
+            }
+
+            public HttpMethod Method { get; }
+
+            public Uri RequestUri { get; }
+
+            public HttpContent? Content { get; }
+
+            public WebHeaderCollection Headers { get; }
+
+            void IHttpMessage.SetHeader(string name, string value) => Headers.Set(name, value);
+
+            bool IHttpMessage.TryGetHeaderValues(string name, out IReadOnlyCollection<string> values) {
+                var value = Headers.Get(name);
+
+                if (value is null) {
+                    values = Array.Empty<string>();
+                    return false;
+                }
+
+                values = NormalizeHeaderValue(value);
+                return true;
+            }
+
+            private static string[] NormalizeHeaderValue(string value) =>
+                value.Split(SplitValues, StringSplitOptions.RemoveEmptyEntries)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(x => x.Trim())
+                    .ToArray();
+        }
+    }
+}
