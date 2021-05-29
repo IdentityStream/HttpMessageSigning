@@ -14,9 +14,9 @@ namespace IdentityStream.HttpMessageSigning {
             using var hashAlgorithm = HashAlgorithm.Create(digestAlgorithm.ToString());
             var digestBytes = hashAlgorithm.ComputeHash(bytes);
             var digest = Convert.ToBase64String(digestBytes);
-            var algorightmName = GetDigestAlgorithmName(digestAlgorithm);
+            var algorithmName = GetDigestAlgorithmName(digestAlgorithm);
 
-            return $"{algorightmName}={digest}";
+            return $"{algorithmName}={digest}";
         }
 
         public static bool HasHeader(this IHttpMessage message, string name) => message.TryGetHeaderValues(name, out _);

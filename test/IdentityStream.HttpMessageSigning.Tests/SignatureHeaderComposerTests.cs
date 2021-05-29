@@ -70,7 +70,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
         }
 
         [Theory]
-        [MemberData(nameof(HashAlgorigthms))]
+        [MemberData(nameof(HashAlgorithms))]
         public async Task DigestHeader_IsAddedToRequest(HashAlgorithmName digestAlgorithm) {
             var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"), new StringContent("hello"));
 
@@ -85,7 +85,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             await Verify(message.Headers[HeaderNames.Digest].Single());
         }
 
-        public static IEnumerable<object[]> HashAlgorigthms {
+        public static IEnumerable<object[]> HashAlgorithms {
             get {
                 yield return new object[] { HashAlgorithmName.SHA1 };
                 yield return new object[] { HashAlgorithmName.SHA256 };
