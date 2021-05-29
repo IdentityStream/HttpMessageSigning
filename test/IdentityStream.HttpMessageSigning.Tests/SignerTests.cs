@@ -13,13 +13,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
     public class SignerTests {
         private const string KeyId = "d4db0d";
 
-        public SignerTests() {
-            Settings = new VerifySettings();
-            Settings.UseDirectory("Snapshots");
-        }
-
-        private VerifySettings Settings { get; }
-
         [Fact]
         public async Task DefaultConfiguration_ProducesCorrectSignatureHeader() {
             var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
@@ -83,9 +76,8 @@ namespace IdentityStream.HttpMessageSigning.Tests {
                 config.AddRecommendedHeaders = false;
             });
 
-            Settings.UseParameters(digestAlgorithm);
-
-            await Verify(message.Headers[HeaderNames.Digest].Single());
+            await Verify(message.Headers[HeaderNames.Digest].Single())
+                .UseParameters(digestAlgorithm);
         }
 
         public static IEnumerable<object[]> HashAlgorithms {
@@ -139,7 +131,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             throw new InvalidOperationException("Could not find Signature header on request.");
         }
 
-        private Task Verify(string value) => Verifier.Verify(value, Settings);
+        private SettingsTask Verify(string value) => Verifier.Verify(value);
 
         private static Task SignAsync(IHttpMessage message, Action<HttpMessageSigningConfiguration>? configure = null) {
             var signatureAlgorithm = new TestSignatureAlgorithm(HashAlgorithmName.SHA512);
