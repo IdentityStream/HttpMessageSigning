@@ -2,7 +2,7 @@
 
 namespace IdentityStream.HttpMessageSigning {
     /// <summary>
-    /// Thown when a configuration is invalid.
+    /// Thrown when a configuration is invalid.
     /// </summary>
     public class InvalidHttpMessageSigningConfiguration : Exception {
         /// <summary>

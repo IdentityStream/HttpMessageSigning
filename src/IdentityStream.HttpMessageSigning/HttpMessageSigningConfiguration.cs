@@ -28,7 +28,7 @@ namespace IdentityStream.HttpMessageSigning {
         public ISignatureAlgorithm SignatureAlgorithm { get; set; }
 
         /// <summary>
-        /// Gets or sets the hash algorithm to procude a <c>Digest</c>
+        /// Gets or sets the hash algorithm to produce a <c>Digest</c>
         /// header based on the HTTP message's body.
         /// </summary>
         public HashAlgorithmName? DigestAlgorithm { get; set; }
