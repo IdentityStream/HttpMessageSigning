@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,9 +38,6 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         /// <inheritdoc/>
         public object? BeforeSendRequest(ref Message request, IClientChannel channel) {
             var httpRequest = GetHttpRequestProperty(request);
-            if (httpRequest is null) {
-                return null;
-            }
 
             var httpMessage = CreateHttpMessage(httpRequest, channel, Config, ref request);
 
@@ -79,7 +77,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
             return stream.ToArray();
         }
 
-        private static HttpRequestMessageProperty? GetHttpRequestProperty(Message request) {
+        private static HttpRequestMessageProperty GetHttpRequestProperty(Message request) {
             if (request.Properties.TryGetValue(HttpRequestMessageProperty.Name, out var property) && property is HttpRequestMessageProperty httpRequest) {
                 return httpRequest;
             }
@@ -109,7 +107,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
 
             void IHttpMessage.SetHeader(string name, string value) => Headers.Set(name, value);
 
-            bool IHttpMessage.TryGetHeaderValues(string name, out IReadOnlyCollection<string> values) {
+            bool IHttpMessage.TryGetHeaderValues(string name, [NotNullWhen(true)] out IReadOnlyCollection<string> values) {
                 var value = Headers.Get(name);
 
                 if (value is null) {

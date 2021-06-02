@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 
 namespace IdentityStream.HttpMessageSigning {
@@ -35,6 +36,6 @@ namespace IdentityStream.HttpMessageSigning {
         /// <param name="name">The header name.</param>
         /// <param name="values">The header values.</param>
         /// <returns><c>true</c> if the header exists; otherwise <c>false</c>.</returns>
-        bool TryGetHeaderValues(string name, out IReadOnlyCollection<string>? values);
+        bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IReadOnlyCollection<string>? values);
     }
 }

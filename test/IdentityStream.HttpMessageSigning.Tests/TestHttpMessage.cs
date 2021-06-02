@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using VerifyXunit;
-using Xunit;
 
 namespace IdentityStream.HttpMessageSigning.Tests {
-
     public class TestHttpMessage : IHttpMessage {
         public TestHttpMessage(HttpMethod method, Uri requestUri, HttpContent? content = null) {
             Method = method;
@@ -24,7 +20,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
         public Dictionary<string, IReadOnlyCollection<string>> Headers { get; }
 
-        public bool TryGetHeaderValues(string name, out IReadOnlyCollection<string>?values) =>
+        public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IReadOnlyCollection<string>?values) =>
             Headers.TryGetValue(name, out values);
 
         public void SetHeader(string name, string value) =>
