@@ -13,6 +13,7 @@ namespace IdentityStream.HttpMessageSigning {
             GetCurrentTimestamp = () => DateTimeOffset.UtcNow;
             HeadersToInclude = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
             AddRecommendedHeaders = true;
+            HeaderValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -51,6 +52,19 @@ namespace IdentityStream.HttpMessageSigning {
         /// Gets or sets the expiry time of a signature.
         /// </summary>
         public TimeSpan? Expires { get; set; }
+
+        internal Dictionary<string, string> HeaderValues { get; }
+
+        /// <summary>
+        /// Adds a header value to all signed requests and includes it in the signature.
+        /// </summary>
+        /// <param name="name">The header name..</param>
+        /// <param name="value">The header value to include.</param>
+        public void AddHeaderValue(string name, string value)
+        {
+            HeadersToInclude.Add(name);
+            HeaderValues[name] = value;
+        }
 
         /// <summary>
         /// Creates a configuration with the specified <paramref name="keyId"/> and <paramref name="signatureAlgorithm"/>.

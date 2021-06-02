@@ -37,6 +37,16 @@ namespace IdentityStream.HttpMessageSigning {
                 message.SetHeader(HeaderNames.Digest, digestHeaderValue);
             }
 
+            foreach (var header in config.HeaderValues)
+            {
+                if (message.HasHeader(header.Key))
+                {
+                    continue; // Allow external overrides by checking if the header already exists.
+                }
+
+                message.SetHeader(header.Key, header.Value);
+            }
+
             bool ShouldInclude(string name) {
                 return config.HeadersToInclude.Contains(name) && !message.HasHeader(name);
             }

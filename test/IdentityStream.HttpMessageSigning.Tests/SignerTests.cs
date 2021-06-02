@@ -50,8 +50,11 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             await SignAsync(message, config => {
                 config.HeadersToInclude.Add("X-Custom-Header");
+                config.AddHeaderValue("X-Other-Header", "Value");
                 config.AddRecommendedHeaders = false;
             });
+
+            Assert.Equal("Value", message.Headers["X-Other-Header"].Single());
 
             await VerifySignatureHeader(message);
         }
