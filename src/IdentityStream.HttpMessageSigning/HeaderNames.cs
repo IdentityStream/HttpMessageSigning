@@ -32,5 +32,10 @@
         /// The <c>Date</c> header.
         /// </summary>
         public const string Date = "Date";
+
+        /// <summary>
+        /// The <c>Host</c> header.
+        /// </summary>
+        public const string Host = "Host";
     }
 }

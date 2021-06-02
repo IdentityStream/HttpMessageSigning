@@ -107,6 +107,19 @@ namespace IdentityStream.HttpMessageSigning.Tests {
         }
 
         [Fact]
+        public async Task HostHeader_IsAddedToRequest()
+        {
+            var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
+
+            await SignAsync(message, config => {
+                config.HeadersToInclude.Add(HeaderNames.Host);
+                config.AddRecommendedHeaders = false;
+            });
+
+            Assert.Equal("identitystream.com", message.Headers[HeaderNames.Host].Single());
+        }
+
+        [Fact]
         public async Task MissingHeader_Throws() {
             var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
 
