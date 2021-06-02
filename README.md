@@ -13,6 +13,7 @@ When hooking up HTTP message signing, there's a bunch of configuration options a
 | `GetCurrentTimestamp` | `DateTimeOffset.UtcNow` | Gets the current UTC timestamp. Useful for testing. |
 | `HeadersToInclude` | Empty | A set of headers to include in the signature. |
 | `Expires` | None | If set, enables signature expiry after the specified amount of time. |
+| `AddHeaderValue` | N/A | Adds a header with a value to all signed requests and their signatures. |
 
 ### WCF
 
