@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 namespace IdentityStream.HttpMessageSigning {
-    internal static class Signer {
+    public static class Signer {
         public static async Task SignAsync(IHttpMessage message, HttpMessageSigningConfiguration config) {
             var timestamp = config.GetCurrentTimestamp();
 
@@ -14,6 +14,14 @@ namespace IdentityStream.HttpMessageSigning {
         private static async Task AddRequiredHeaders(IHttpMessage message, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
             if (ShouldInclude(HeaderNames.Date)) {
                 message.SetHeader(HeaderNames.Date, timestamp.ToString("R"));
+            }
+
+            if (ShouldInclude(HeaderNames.Host))
+            {
+                message.SetHeader(HeaderNames.Host,
+                    message.RequestUri.GetComponents(
+                        UriComponents.NormalizedHost | // Always convert punycode to Unicode.
+                        UriComponents.Host, UriFormat.Unescaped));
             }
 
             if (ShouldInclude(HeaderNames.Digest) && config.DigestAlgorithm.HasValue) {
