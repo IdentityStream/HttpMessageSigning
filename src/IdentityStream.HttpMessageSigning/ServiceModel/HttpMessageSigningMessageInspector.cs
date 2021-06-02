@@ -16,7 +16,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
     /// A WCF message inspector that signs HTTP requests before they're sent.
     /// </summary>
     public class HttpMessageSigningMessageInspector : IClientMessageInspector {
-        private static readonly XmlWriterSettings Settings = new XmlWriterSettings {
+        private static readonly XmlWriterSettings Settings = new() {
             Encoding = Encoding.UTF8
         };
 
@@ -88,7 +88,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         }
 
         private class WcfHttpRequestMessage : IHttpMessage {
-            private static readonly char[] SplitValues = new char[] { ',' };
+            private static readonly char[] SplitValues = { ',' };
 
             public WcfHttpRequestMessage(HttpMethod method, Uri requestUri, HttpContent? content, WebHeaderCollection headers) {
                 Method = method;

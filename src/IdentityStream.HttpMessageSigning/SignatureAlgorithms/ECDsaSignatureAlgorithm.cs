@@ -17,7 +17,10 @@ namespace IdentityStream.HttpMessageSigning {
         public string Name => "ECDsa";
 
         public byte[] ComputeHash(string value) {
-            using var hasher = Hasher.Create(HashAlgorithm.ToString());
+            using var hasher = Hasher.Create(HashAlgorithm.Name);
+            if (hasher is null) {
+                throw new InvalidOperationException($"Invalid hash algorithm: {HashAlgorithm.Name}");
+            }
             var plainBytes = Encoding.UTF8.GetBytes(value);
             var hashedBytes = hasher.ComputeHash(plainBytes);
             return Ecdsa.SignHash(hashedBytes);

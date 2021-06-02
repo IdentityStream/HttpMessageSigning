@@ -4,7 +4,7 @@ using System.Text;
 
 namespace IdentityStream.HttpMessageSigning {
     internal static class SigningStringComposer {
-        private static readonly char[] SplitValues = new[] { '\n' };
+        private static readonly char[] SplitValues = { '\n' };
 
         public static string Compose(IHttpMessage message, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) =>
             config.HeadersToInclude
