@@ -131,7 +131,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
                 config.GetCurrentTimestamp = () => new DateTimeOffset(2021, 05, 27, 10, 23, 00, TimeSpan.Zero);
                 configure?.Invoke(config);
             });
-            return Signer.SignAsync(message, config);
+            return HttpMessageSigner.SignAsync(message, config);
         }
     }
 }

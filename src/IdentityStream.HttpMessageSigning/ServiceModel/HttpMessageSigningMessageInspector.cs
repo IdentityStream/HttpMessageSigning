@@ -43,7 +43,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
 
             var httpMessage = CreateHttpMessage(httpRequest, channel, Config, ref request);
 
-            Signer.SignAsync(httpMessage, Config).GetAwaiter().GetResult(); // Ugh :(
+            HttpMessageSigner.SignAsync(httpMessage, Config).GetAwaiter().GetResult(); // Ugh :(
 
             return null;
         }

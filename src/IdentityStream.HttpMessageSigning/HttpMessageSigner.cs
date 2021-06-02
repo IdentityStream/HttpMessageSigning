@@ -2,7 +2,15 @@
 using System.Threading.Tasks;
 
 namespace IdentityStream.HttpMessageSigning {
-    public static class Signer {
+    /// <summary>
+    /// Class to use for signing HTTP requests.
+    /// </summary>
+    public static class HttpMessageSigner {
+        /// <summary>
+        /// Signs the provided <paramref name="message"/> according to the provided <paramref name="config"/>.
+        /// </summary>
+        /// <param name="message">The HTTP message to sign.</param>
+        /// <param name="config">The configuration to use when signing.</param>
         public static async Task SignAsync(IHttpMessage message, HttpMessageSigningConfiguration config) {
             var timestamp = config.GetCurrentTimestamp();
 
