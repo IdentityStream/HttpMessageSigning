@@ -29,10 +29,8 @@ namespace IdentityStream.HttpMessageSigning {
         }
 
         private static StringBuilder AppendRequestTargetHeader(this StringBuilder builder, IHttpMessage message) {
-            // TODO: Should this be escaped or not?
-            var path = message.RequestUri.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped);
+            var path = message.RequestUri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
             var method = message.Method.ToString().ToLowerInvariant();
-
             return builder.AppendHeader(HeaderNames.RequestTarget, $"{method} {path}");
         }
 
