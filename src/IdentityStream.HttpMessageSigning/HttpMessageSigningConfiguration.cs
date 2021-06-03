@@ -67,6 +67,16 @@ namespace IdentityStream.HttpMessageSigning {
         }
 
         /// <summary>
+        /// Adds a collection of headers to all signed requests and includes it in the signature.
+        /// </summary>
+        /// <param name="headers">The headers.</param>
+        public void AddHeaderValues(IEnumerable<KeyValuePair<string, string>> headers) {
+            foreach (var header in headers) {
+                AddHeaderValue(header.Key, header.Value);
+            }
+        }
+
+        /// <summary>
         /// Creates a configuration with the specified <paramref name="keyId"/> and <paramref name="signatureAlgorithm"/>.
         /// </summary>
         /// <param name="keyId">The key ID to use.</param>
