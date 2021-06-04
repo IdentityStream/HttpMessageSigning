@@ -99,7 +99,11 @@ namespace IdentityStream.HttpMessageSigning {
         public static HttpMessageSigningConfiguration FromCertificate(X509Certificate2 certificate, HashAlgorithmName hashAlgorithm) =>
             new(certificate.GetKeyId(), certificate.GetSignatureAlgorithm(hashAlgorithm));
 
-        internal HttpMessageSigningConfiguration Validate() {
+        /// <summary>
+        /// Validates the configuration.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if configuration is invalid.</exception>
+        public HttpMessageSigningConfiguration Validate() {
             if (GetCurrentTimestamp is null) {
                 throw new InvalidOperationException($"{nameof(GetCurrentTimestamp)} is required.");
             }

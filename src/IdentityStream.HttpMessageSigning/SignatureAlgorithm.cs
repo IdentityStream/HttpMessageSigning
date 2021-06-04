@@ -5,7 +5,10 @@ namespace IdentityStream.HttpMessageSigning {
     /// Convenience class for creating signature algorithms based on asymmetric algorithms.
     /// </summary>
     public static class SignatureAlgorithm {
-        internal static readonly HashAlgorithmName DefaultHashAlgorithm = HashAlgorithmName.SHA512;
+        /// <summary>
+        /// The the default hash algorithm used for signing.
+        /// </summary>
+        public static readonly HashAlgorithmName DefaultHashAlgorithm = HashAlgorithmName.SHA512;
 
         /// <summary>
         /// Creates an <see cref="RSA"/> signature algorithm using the default <see cref="HashAlgorithm"/> (SHA512).

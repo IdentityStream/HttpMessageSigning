@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IdentityStream.HttpMessageSigning\IdentityStream.HttpMessageSigning.csproj" />
+    <ProjectReference Include="..\..\src\IdentityStream.HttpMessageSigning.ServiceModel\IdentityStream.HttpMessageSigning.ServiceModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
