@@ -27,11 +27,13 @@ using var client = new TheEndpointClient(binding, endpointAddress);
 
 var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
-client.Endpoint.UseHttpMessageSigning("key-id", signatureAlgorithm);
+var config = HttpMessageSigningConfiguration.Create("key-id", signatureAlgorithm);
+
+client.Endpoint.UseHttpMessageSigning(config);
 
 // Make calls using client :)
 ```
-<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L15-L23' title='Snippet source file'>snippet source</a> | <a href='#snippet-wcf_endpoint_usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-wcf_endpoint_usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 There's also a bunch of convenience overloads for working with `X509Certificate2`, which will automatically
@@ -54,5 +56,5 @@ using var client = new HttpClient(handler);
 
 // Make requests using client :)
 ```
-<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L27-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-httpclient_signinghttpmessagehandler' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L29-L39' title='Snippet source file'>snippet source</a> | <a href='#snippet-httpclient_signinghttpmessagehandler' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->

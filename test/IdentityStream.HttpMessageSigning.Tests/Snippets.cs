@@ -17,7 +17,9 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
-            client.Endpoint.UseHttpMessageSigning("key-id", signatureAlgorithm);
+            var config = HttpMessageSigningConfiguration.Create("key-id", signatureAlgorithm);
+
+            client.Endpoint.UseHttpMessageSigning(config);
 
             // Make calls using client :)
             #endregion

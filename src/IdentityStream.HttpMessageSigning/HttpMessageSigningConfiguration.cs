@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 namespace IdentityStream.HttpMessageSigning {
     /// <summary>
@@ -77,23 +78,61 @@ namespace IdentityStream.HttpMessageSigning {
         }
 
         /// <summary>
+        /// Creates a configuration based on the specified <paramref name="certificate"/>.
+        /// </summary>
+        /// <param name="certificate">The certificate to use for signing HTTP messages.</param>
+        /// <returns>A new configuration based on the specified <paramref name="certificate"/>.</returns>
+        public static HttpMessageSigningConfiguration Create(X509Certificate2 certificate) =>
+            Create(certificate, configure: null);
+
+        /// <summary>
+        /// Creates a configuration based on the specified <paramref name="certificate"/>,
+        /// with an optional <paramref name="configure"/> delegate for further configuration.
+        /// </summary>
+        /// <param name="certificate">The certificate to use for signing HTTP messages.</param>
+        /// <param name="configure">A delegate for changing the configuration before it's validated.</param>
+        /// <returns>A new configuration based on the specified <paramref name="certificate"/>.</returns>
+        public static HttpMessageSigningConfiguration Create(X509Certificate2 certificate, Action<HttpMessageSigningConfiguration>? configure) =>
+            Create(certificate, HttpMessageSigning.SignatureAlgorithm.DefaultHashAlgorithm, configure);
+
+        /// <summary>
+        /// Creates a configuration based on the specified <paramref name="certificate"/> and <paramref name="hashAlgorithm"/>.
+        /// </summary>
+        /// <param name="certificate">The certificate to use for signing HTTP messages.</param>
+        /// <param name="hashAlgorithm">The hash algorithm to use for signing HTTP messages.</param>
+        /// <returns>A new configuration based on the specified <paramref name="certificate"/> and <paramref name="hashAlgorithm"/>.</returns>
+        public static HttpMessageSigningConfiguration Create(X509Certificate2 certificate, HashAlgorithmName hashAlgorithm) =>
+            Create(certificate, hashAlgorithm, configure: null);
+
+        /// <summary>
+        /// Creates a configuration based on the specified <paramref name="certificate"/>,
+        /// with an optional <paramref name="configure"/> delegate for further configuration.
+        /// </summary>
+        /// <param name="certificate">The certificate to use for signing HTTP messages.</param>
+        /// <param name="hashAlgorithm">The hash algorithm to use for signing HTTP messages.</param>
+        /// <param name="configure">A delegate for changing the configuration before it's validated.</param>
+        /// <returns>A new configuration based on the specified <paramref name="certificate"/>.</returns>
+        public static HttpMessageSigningConfiguration Create(X509Certificate2 certificate, HashAlgorithmName hashAlgorithm, Action<HttpMessageSigningConfiguration>? configure) =>
+            Create(certificate.GetKeyId(), certificate.GetSignatureAlgorithm(hashAlgorithm), configure);
+
+        /// <summary>
         /// Creates a configuration with the specified <paramref name="keyId"/> and <paramref name="signatureAlgorithm"/>.
         /// </summary>
         /// <param name="keyId">The key ID to use.</param>
         /// <param name="signatureAlgorithm">The signature algorithm to use.</param>
         /// <returns>A new configuration with the specified values.</returns>
-        public static HttpMessageSigningConfiguration Create(string keyId, ISignatureAlgorithm signatureAlgorithm) {
-            return Create(keyId, signatureAlgorithm, configure: null);
-        }
+        public static HttpMessageSigningConfiguration Create(string keyId, ISignatureAlgorithm signatureAlgorithm) =>
+            Create(keyId, signatureAlgorithm, configure: null);
 
         /// <summary>
         /// Creates a configuration with the specified <paramref name="keyId"/> and <paramref name="signatureAlgorithm"/>,
-        /// with an optional <paramref name="configure"/> delegate for further configuration..
+        /// with an optional <paramref name="configure"/> delegate for further configuration.
         /// </summary>
         /// <param name="keyId">The key ID to use.</param>
         /// <param name="signatureAlgorithm">The signature algorithm to use.</param>
         /// <param name="configure">A delegate for changing the configuration before it's validated.</param>
         /// <returns>A new configuration with the specified values.</returns>
+        /// <exception cref="InvalidOperationException">Thrown in case of an invalid configuration.</exception>
         public static HttpMessageSigningConfiguration Create(string keyId, ISignatureAlgorithm signatureAlgorithm, Action<HttpMessageSigningConfiguration>? configure) {
             var config = new HttpMessageSigningConfiguration(keyId, signatureAlgorithm);
 
