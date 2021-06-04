@@ -20,7 +20,7 @@ When using a certificate for signing, there's a convenience method called `HttpM
 
 ### WCF
 
-To use HTTP message signing with WCF, call `UseHttpMessageSigning` on your client endpoint:
+To use HTTP message signing with WCF, call `UseHttpMessageSigning` on your client:
 
 <!-- snippet: WCF_Endpoint_UseHttpMessageSigning -->
 <a id='snippet-wcf_endpoint_usehttpmessagesigning'></a>
