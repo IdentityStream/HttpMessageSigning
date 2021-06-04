@@ -13,13 +13,13 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
         public void WCF_Client_Setup(BasicHttpsBinding binding, EndpointAddress endpointAddress, RSA rsaOrECDsaAlgorithm) {
             #region WCF_Endpoint_UseHttpMessageSigning
-            using var client = new TheEndpointClient(binding, endpointAddress);
-
             var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
-            var config = HttpMessageSigningConfiguration.Create("key-id", signatureAlgorithm);
+            var config = new HttpMessageSigningConfiguration("key-id", signatureAlgorithm);
 
-            client.Endpoint.UseHttpMessageSigning(config);
+            using var client = new TheEndpointClient(binding, endpointAddress);
+
+            client.UseHttpMessageSigning(config);
 
             // Make calls using client :)
             #endregion
@@ -29,7 +29,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             #region HttpClient_SigningHttpMessageHandler
             var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
-            var config = HttpMessageSigningConfiguration.Create("key-id", signatureAlgorithm);
+            var config = new HttpMessageSigningConfiguration("key-id", signatureAlgorithm);
 
             var handler = new SigningHttpMessageHandler(config);
 

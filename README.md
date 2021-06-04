@@ -16,6 +16,8 @@ When hooking up HTTP message signing, there's a bunch of configuration options a
 | `AddHeaderValue` | N/A | Adds a header with a value to all signed requests and their signatures. |
 | `AddHeaderValues` | N/A | Adds a collection of headers to all signed requests and their signatures. |
 
+When using a certificate for signing, there's a convenience method called `HttpMessageSigningConfiguration.FromCertificate` that can be used to get a configuration with crypto settings based on the certificate.
+
 ### WCF
 
 To use HTTP message signing with WCF, call `UseHttpMessageSigning` on your client endpoint:
@@ -23,21 +25,18 @@ To use HTTP message signing with WCF, call `UseHttpMessageSigning` on your clien
 <!-- snippet: WCF_Endpoint_UseHttpMessageSigning -->
 <a id='snippet-wcf_endpoint_usehttpmessagesigning'></a>
 ```cs
-using var client = new TheEndpointClient(binding, endpointAddress);
-
 var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
-var config = HttpMessageSigningConfiguration.Create("key-id", signatureAlgorithm);
+var config = new HttpMessageSigningConfiguration("key-id", signatureAlgorithm);
 
-client.Endpoint.UseHttpMessageSigning(config);
+using var client = new TheEndpointClient(binding, endpointAddress);
+
+client.UseHttpMessageSigning(config);
 
 // Make calls using client :)
 ```
 <sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-wcf_endpoint_usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
-
-There's also a bunch of convenience overloads for working with `X509Certificate2`, which will automatically
-get the signature algorithm based on the certificate cryptography.
 
 ### HttpClient
 
@@ -48,7 +47,7 @@ To use HTTP message signing with `HttpClient`, create an instance of `SigningHtt
 ```cs
 var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
-var config = HttpMessageSigningConfiguration.Create("key-id", signatureAlgorithm);
+var config = new HttpMessageSigningConfiguration("key-id", signatureAlgorithm);
 
 var handler = new SigningHttpMessageHandler(config);
 

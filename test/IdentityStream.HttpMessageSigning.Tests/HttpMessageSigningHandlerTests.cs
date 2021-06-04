@@ -18,12 +18,14 @@ namespace IdentityStream.HttpMessageSigning.Tests {
         public async Task IncludedHeaders_AreAddedToRequest() {
             var signatureAlgorithm = new TestSignatureAlgorithm(HashAlgorithmName.SHA512);
 
-            var config = HttpMessageSigningConfiguration.Create("d4db0d", signatureAlgorithm, config => {
-                config.GetCurrentTimestamp = () => new DateTimeOffset(2021, 05, 27, 10, 23, 00, TimeSpan.Zero);
-                config.DigestAlgorithm = HashAlgorithmName.SHA256;
-                config.HeadersToInclude.Add(HeaderNames.Date);
-                config.HeadersToInclude.Add(HeaderNames.Host);
-            });
+            var config = new HttpMessageSigningConfiguration("d4db0d", signatureAlgorithm) {
+                GetCurrentTimestamp = () => new DateTimeOffset(2021, 05, 27, 10, 23, 00, TimeSpan.Zero),
+                DigestAlgorithm = HashAlgorithmName.SHA256,
+                HeadersToInclude = {
+                    HeaderNames.Date,
+                    HeaderNames.Host,
+                },
+            };
 
             var recorder = new RecordingHttpRequestHandler();
 

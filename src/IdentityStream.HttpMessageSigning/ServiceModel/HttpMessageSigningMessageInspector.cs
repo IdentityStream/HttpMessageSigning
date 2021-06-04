@@ -25,7 +25,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         /// </summary>
         /// <param name="config">The configuration to use when signing HTTP messages.</param>
         public HttpMessageSigningMessageInspector(HttpMessageSigningConfiguration config) {
-            Config = config;
+            Config = config?.Validate() ?? throw new ArgumentNullException(nameof(config));
         }
 
         private HttpMessageSigningConfiguration Config { get; }

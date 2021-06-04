@@ -12,15 +12,15 @@ var client = new HelloEndpointClient(binding, remoteAddress);
 
 var certificate = GetCertificate("CN=IdentityStreamServiceManager");
 
-var config = HttpMessageSigningConfiguration.Create(certificate, HashAlgorithmName.SHA256, config => {
-    config.DigestAlgorithm = HashAlgorithmName.SHA256;
-    config.HeadersToInclude.Add(HeaderNames.RequestTarget);
-    config.HeadersToInclude.Add(HeaderNames.Expires);
-    config.HeadersToInclude.Add(HeaderNames.Created);
-    config.HeadersToInclude.Add(HeaderNames.Digest);
-    config.AddRecommendedHeaders = false;
-    config.Expires = TimeSpan.FromMinutes(2);
-});
+var config = HttpMessageSigningConfiguration.FromCertificate(certificate, HashAlgorithmName.SHA256);
+
+config.DigestAlgorithm = HashAlgorithmName.SHA256;
+config.HeadersToInclude.Add(HeaderNames.RequestTarget);
+config.HeadersToInclude.Add(HeaderNames.Expires);
+config.HeadersToInclude.Add(HeaderNames.Created);
+config.HeadersToInclude.Add(HeaderNames.Digest);
+config.AddRecommendedHeaders = false;
+config.Expires = TimeSpan.FromMinutes(2);
 
 client.Endpoint.UseHttpMessageSigning(config);
 

@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.ServiceModel;
 using System.ServiceModel.Description;
 
 namespace IdentityStream.HttpMessageSigning.ServiceModel {
@@ -80,8 +81,22 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         /// <param name="configure">A delegate for changing the configuration before it's validated.</param>
         [Obsolete(DeprecationMessage)]
         public static void UseHttpMessageSigning(this ServiceEndpoint endpoint, string keyId, ISignatureAlgorithm signatureAlgorithm, Action<HttpMessageSigningConfiguration>? configure) {
-            endpoint.UseHttpMessageSigning(HttpMessageSigningConfiguration.Create(keyId, signatureAlgorithm, configure));
+            var config = new HttpMessageSigningConfiguration(keyId, signatureAlgorithm);
+
+            configure?.Invoke(config);
+
+            endpoint.UseHttpMessageSigning(config);
         }
+
+        /// <summary>
+        /// Adds HTTP message signing behavior using the specified <paramref name="config"/>.
+        /// </summary>
+        /// <typeparam name="TChannel">The channel type of the client proxy.</typeparam>
+        /// <param name="client">The client proxy.</param>
+        /// <param name="config">The configuration to use for signing HTTP messages.</param>
+        public static void UseHttpMessageSigning<TChannel>(this ClientBase<TChannel> client, HttpMessageSigningConfiguration config)
+            where TChannel : class =>
+                client.Endpoint.UseHttpMessageSigning(config);
 
         /// <summary>
         /// Adds HTTP message signing behavior using the specified <paramref name="config"/>.
@@ -89,6 +104,9 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         /// <param name="endpoint">The endpoint to add the behavior to.</param>
         /// <param name="config">The configuration to use for signing HTTP messages.</param>
         public static void UseHttpMessageSigning(this ServiceEndpoint endpoint, HttpMessageSigningConfiguration config) {
+            if (endpoint is null) {
+                throw new ArgumentNullException(nameof(endpoint));
+            }
             if (!endpoint.EndpointBehaviors.Contains(typeof(HttpMessageSigningEndpointBehavior))) {
                 endpoint.EndpointBehaviors.Add(new HttpMessageSigningEndpointBehavior(config));
             }
