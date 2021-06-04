@@ -21,22 +21,6 @@ namespace IdentityStream.HttpMessageSigning {
             certificate.GetSignatureAlgorithm(SignatureAlgorithm.DefaultHashAlgorithm);
 
         /// <summary>
-        /// Gets the key ID for the specified <paramref name="certificate"/>.
-        /// </summary>
-        /// <param name="certificate">The certificate to get the key ID for.</param>
-        /// <returns>The key ID to be used when signing requests.</returns>
-        public static string GetKeyId(this X509Certificate2 certificate) {
-            var hash = certificate.GetCertHash();
-            var builder = new StringBuilder();
-
-            foreach (var @byte in hash.Skip(hash.Length - KeyIdLength)) {
-                builder.Append(@byte.ToString("x2"));
-            }
-
-            return builder.ToString();
-        }
-
-        /// <summary>
         /// Gets a signature algorithm based on the cryptography of the provided <paramref name="certificate"/>,
         /// using the specified <paramref name="hashAlgorithm"/>.
         /// </summary>
@@ -57,6 +41,22 @@ namespace IdentityStream.HttpMessageSigning {
             }
 
             throw new NotSupportedException($"Unable to get private key from certificate: {certificate}");
+        }
+
+        /// <summary>
+        /// Gets the key ID for the specified <paramref name="certificate"/>.
+        /// </summary>
+        /// <param name="certificate">The certificate to get the key ID for.</param>
+        /// <returns>The key ID to be used when signing requests.</returns>
+        public static string GetKeyId(this X509Certificate2 certificate) {
+            var hash = certificate.GetCertHash();
+            var builder = new StringBuilder();
+
+            foreach (var @byte in hash.Skip(hash.Length - KeyIdLength)) {
+                builder.Append(@byte.ToString("x2"));
+            }
+
+            return builder.ToString();
         }
     }
 }

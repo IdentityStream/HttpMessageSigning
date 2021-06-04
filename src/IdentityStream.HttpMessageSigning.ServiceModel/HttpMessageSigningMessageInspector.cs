@@ -24,6 +24,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         /// Creates a new inspector instance using the specified <paramref name="config"/>.
         /// </summary>
         /// <param name="config">The configuration to use when signing HTTP messages.</param>
+        /// <exception cref="InvalidOperationException">Thrown if <paramref name="config"/> is invalid.</exception>
         public HttpMessageSigningMessageInspector(HttpMessageSigningConfiguration config) {
             Config = config?.Validate() ?? throw new ArgumentNullException(nameof(config));
         }

@@ -4,6 +4,7 @@ using System.Text;
 using Hasher = System.Security.Cryptography.HashAlgorithm;
 
 namespace IdentityStream.HttpMessageSigning {
+    // ReSharper disable once InconsistentNaming
     internal class RSASignatureAlgorithm : ISignatureAlgorithm {
         public RSASignatureAlgorithm(RSA? rsa, HashAlgorithmName hashAlgorithm) {
             Rsa = rsa ?? throw new ArgumentNullException(nameof(rsa));
