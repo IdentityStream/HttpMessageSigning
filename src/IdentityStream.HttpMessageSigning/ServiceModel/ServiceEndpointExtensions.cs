@@ -1,11 +1,12 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.ServiceModel;
 using System.ServiceModel.Description;
+using IdentityStream.HttpMessageSigning;
+using IdentityStream.HttpMessageSigning.ServiceModel;
 
-namespace IdentityStream.HttpMessageSigning.ServiceModel {
+// ReSharper disable once CheckNamespace
+namespace System.ServiceModel {
     /// <summary>
     /// Extensions for hooking up HTTP message signing to a WCF service endpoint.
     /// </summary>
