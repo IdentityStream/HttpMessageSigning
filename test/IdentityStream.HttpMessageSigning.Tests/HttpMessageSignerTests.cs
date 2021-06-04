@@ -10,7 +10,7 @@ using Xunit;
 
 namespace IdentityStream.HttpMessageSigning.Tests {
     [UsesVerify]
-    public class SignerTests {
+    public class HttpMessageSignerTests {
         private const string KeyId = "d4db0d";
 
         [Fact]
