@@ -17,6 +17,7 @@
     <MinVerDefaultPreReleasePhase>beta</MinVerDefaultPreReleasePhase>
     <MinVerTagPrefix>v</MinVerTagPrefix>
 
+    <PackageTags>http;message;signing;signature</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
