@@ -9,7 +9,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             Method = method;
             RequestUri = requestUri;
             Content = content;
-            Headers = new Dictionary<string, IReadOnlyCollection<string>>(StringComparer.OrdinalIgnoreCase);
+            Headers = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
         }
 
         public HttpMethod Method { get; }
@@ -18,9 +18,9 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
         public HttpContent? Content { get; }
 
-        public Dictionary<string, IReadOnlyCollection<string>> Headers { get; }
+        public Dictionary<string, IEnumerable<string>> Headers { get; }
 
-        public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IReadOnlyCollection<string>?values) =>
+        public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string>?values) =>
             Headers.TryGetValue(name, out values);
 
         public void SetHeader(string name, string value) =>

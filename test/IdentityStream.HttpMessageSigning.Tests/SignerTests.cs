@@ -126,7 +126,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
         private Task VerifySignatureHeader(IHttpMessage message) {
             if (message.TryGetHeaderValues(HeaderNames.Signature, out var values)) {
-                return Verify(values!.Single());
+                return Verify(values.Single());
             }
             throw new InvalidOperationException("Could not find Signature header on request.");
         }

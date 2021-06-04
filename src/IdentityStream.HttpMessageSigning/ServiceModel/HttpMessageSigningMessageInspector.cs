@@ -107,7 +107,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
 
             void IHttpMessage.SetHeader(string name, string value) => Headers.Set(name, value);
 
-            bool IHttpMessage.TryGetHeaderValues(string name, [NotNullWhen(true)] out IReadOnlyCollection<string> values) {
+            bool IHttpMessage.TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string> values) {
                 var value = Headers.Get(name);
 
                 if (value is null) {
@@ -119,11 +119,10 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
                 return true;
             }
 
-            private static string[] NormalizeHeaderValue(string value) =>
+            private static IEnumerable<string> NormalizeHeaderValue(string value) =>
                 value.Split(SplitValues, StringSplitOptions.RemoveEmptyEntries)
                     .Where(x => !string.IsNullOrWhiteSpace(x))
-                    .Select(x => x.Trim())
-                    .ToArray();
+                    .Select(x => x.Trim());
         }
     }
 }
