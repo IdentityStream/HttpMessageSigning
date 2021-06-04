@@ -60,8 +60,8 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         }
 
         private static byte[] ReadRequestBody(ref Message message) {
-            var stream = new MemoryStream();
-            var writer = XmlWriter.Create(stream, Settings);
+            using var stream = new MemoryStream();
+            using var writer = XmlWriter.Create(stream, Settings);
 
             var buffer = message.CreateBufferedCopy(int.MaxValue);
 
