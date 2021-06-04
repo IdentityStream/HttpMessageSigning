@@ -58,6 +58,9 @@ namespace IdentityStream.HttpMessageSigning {
 
             public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string>? values) =>
                 Request.Headers.TryGetValues(name, out values);
+
+            public void SetProperty(string name, string value) =>
+                Request.Properties[name] = value;
         }
     }
 }

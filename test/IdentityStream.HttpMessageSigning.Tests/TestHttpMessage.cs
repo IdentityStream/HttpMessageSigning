@@ -10,6 +10,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             RequestUri = requestUri;
             Content = content;
             Headers = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
+            Properties = new Dictionary<string, string>();
         }
 
         public HttpMethod Method { get; }
@@ -20,10 +21,15 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
         public Dictionary<string, IEnumerable<string>> Headers { get; }
 
-        public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string>?values) =>
+        public Dictionary<string, string> Properties { get; }
+
+        public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string>? values) =>
             Headers.TryGetValue(name, out values);
 
         public void SetHeader(string name, string value) =>
             Headers[name] = new[] { value };
+
+        public void SetProperty(string name, string value) =>
+            Properties[name] = value;
     }
 }

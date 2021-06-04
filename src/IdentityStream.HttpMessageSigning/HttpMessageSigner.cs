@@ -55,6 +55,9 @@ namespace IdentityStream.HttpMessageSigning {
         private static void AddSignatureHeader(IHttpMessage message, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
             var signingString = SigningStringComposer.Compose(message, config, timestamp);
 
+            // Add the signing string to the request so it can be inspected later :)
+            message.SetProperty(Constants.SigningString, signingString);
+
             var signatureHash = config.SignatureAlgorithm.ComputeHash(signingString);
             var signatureString = Convert.ToBase64String(signatureHash);
 

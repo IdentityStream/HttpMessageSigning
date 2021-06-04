@@ -56,7 +56,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
                 content = new ByteArrayContent(requestBody);
             }
 
-            return new WcfHttpRequestMessage(method, requestUri, content, httpRequest.Headers);
+            return new WcfHttpRequestMessage(method, requestUri, content, httpRequest.Headers, request.Properties);
         }
 
         private static byte[] ReadRequestBody(ref Message message) {
@@ -90,11 +90,17 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
         private class WcfHttpRequestMessage : IHttpMessage {
             private static readonly char[] SplitValues = { ',' };
 
-            public WcfHttpRequestMessage(HttpMethod method, Uri requestUri, HttpContent? content, WebHeaderCollection headers) {
+            public WcfHttpRequestMessage(
+                HttpMethod method,
+                Uri requestUri,
+                HttpContent? content,
+                WebHeaderCollection headers,
+                MessageProperties properties) {
                 Method = method;
                 RequestUri = requestUri;
                 Content = content;
                 Headers = headers;
+                Properties = properties;
             }
 
             public HttpMethod Method { get; }
@@ -105,9 +111,12 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
 
             public WebHeaderCollection Headers { get; }
 
-            void IHttpMessage.SetHeader(string name, string value) => Headers.Set(name, value);
+            public MessageProperties Properties { get; }
 
-            bool IHttpMessage.TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string> values) {
+            public void SetHeader(string name, string value) =>
+                Headers.Set(name, value);
+
+            public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string> values) {
                 var value = Headers.Get(name);
 
                 if (value is null) {
@@ -118,6 +127,9 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
                 values = NormalizeHeaderValue(value);
                 return true;
             }
+
+            public void SetProperty(string name, string value) =>
+                Properties[name] = value;
 
             private static IEnumerable<string> NormalizeHeaderValue(string value) =>
                 value.Split(SplitValues, StringSplitOptions.RemoveEmptyEntries)
