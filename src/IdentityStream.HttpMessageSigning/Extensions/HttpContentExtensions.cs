@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace IdentityStream.HttpMessageSigning {
-
     internal static class HttpContentExtensions {
         public static async Task<string> GetDigestHeaderValues(this HttpContent content, HashAlgorithmName digestAlgorithm) {
             if (content is null) {
