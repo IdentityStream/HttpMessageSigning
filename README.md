@@ -20,16 +20,18 @@ When hooking up HTTP message signing, there's a bunch of configuration options a
 
 To use HTTP message signing with WCF, call `UseHttpMessageSigning` on your client endpoint:
 
-<!-- snippet: UseHttpMessageSigning -->
-<a id='snippet-usehttpmessagesigning'></a>
+<!-- snippet: WCF_Endpoint_UseHttpMessageSigning -->
+<a id='snippet-wcf_endpoint_usehttpmessagesigning'></a>
 ```cs
-var client = new TheEndpointClient(binding, endpointAddress);
+using var client = new TheEndpointClient(binding, endpointAddress);
 
 var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
 client.Endpoint.UseHttpMessageSigning("key-id", signatureAlgorithm);
+
+// Make calls using client :)
 ```
-<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L14-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L15-L23' title='Snippet source file'>snippet source</a> | <a href='#snippet-wcf_endpoint_usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 There's also a bunch of convenience overloads for working with `X509Certificate2`, which will automatically
@@ -37,4 +39,20 @@ get the signature algorithm based on the certificate cryptography.
 
 ### HttpClient
 
-Coming soon...
+To use HTTP message signing with `HttpClient`, create an instance of `SigningHttpMessageHandler` and pass it when creating the `HttpClient` instance:
+
+<!-- snippet: HttpClient_SigningHttpMessageHandler -->
+<a id='snippet-httpclient_signinghttpmessagehandler'></a>
+```cs
+var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
+
+var config = HttpMessageSigningConfiguration.Create("key-id", signatureAlgorithm);
+
+var handler = new SigningHttpMessageHandler(config);
+
+using var client = new HttpClient(handler);
+
+// Make requests using client :)
+```
+<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L27-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-httpclient_signinghttpmessagehandler' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
