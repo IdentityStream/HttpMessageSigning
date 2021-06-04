@@ -6,10 +6,14 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using VerifyXunit;
 using Xunit;
 
 namespace IdentityStream.HttpMessageSigning.Tests {
+    [UsesVerify]
     public class HttpMessageSigningHandlerTests {
+        private static readonly HttpRequestOptionsKey<string> SigningString = new(Constants.SigningString);
+
         [Fact]
         public async Task IncludedHeaders_AreAddedToRequest() {
             var signatureAlgorithm = new TestSignatureAlgorithm(HashAlgorithmName.SHA512);
@@ -35,6 +39,9 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             Assert.True(request.Headers.Contains(HeaderNames.Digest));
             Assert.True(request.Headers.Contains(HeaderNames.Host));
             Assert.True(request.Headers.Contains(HeaderNames.Date));
+
+            Assert.True(request.Options.TryGetValue(SigningString, out var signingString));
+            await Verifier.Verify(signingString);
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace IdentityStream.HttpMessageSigning {
         /// <param name="message">The HTTP message to sign.</param>
         /// <param name="config">The configuration to use when signing.</param>
         public static async Task SignAsync(IHttpMessage message, HttpMessageSigningConfiguration config) {
-            var requestConfig = RequestHttpMessageSigningConfiguration.Create(config, message);
+            var requestConfig = new RequestHttpMessageSigningConfiguration(config, message);
 
             var timestamp = requestConfig.GetCurrentTimestamp();
 
@@ -28,25 +28,24 @@ namespace IdentityStream.HttpMessageSigning {
 
             if (ShouldInclude(HeaderNames.Host))
             {
-                message.SetHeader(HeaderNames.Host,
-                    message.RequestUri.GetComponents(
-                        UriComponents.NormalizedHost | // Always convert punycode to Unicode.
-                        UriComponents.Host, UriFormat.Unescaped));
+                var hostHeaderValue = message.RequestUri.GetComponents(
+                    UriComponents.NormalizedHost | // Always convert punycode to Unicode.
+                    UriComponents.Host, UriFormat.Unescaped);
+                message.SetHeader(HeaderNames.Host, hostHeaderValue);
             }
 
             if (ShouldInclude(HeaderNames.Digest) && config.DigestAlgorithm.HasValue && message.Content != null) {
-                var digestHeaderValue = await message.Content.GetDigestHeaderValues(config.DigestAlgorithm.Value).ConfigureAwait(false);
+                var digestHeaderValue = await message.Content
+                    .GetDigestHeaderValues(config.DigestAlgorithm.Value)
+                    .ConfigureAwait(false);
                 message.SetHeader(HeaderNames.Digest, digestHeaderValue);
             }
 
             foreach (var header in config.HeaderValues)
             {
-                if (message.HasHeader(header.Key))
-                {
-                    continue; // Allow external overrides by checking if the header already exists.
+                if (ShouldInclude(header.Key)) {
+                    message.SetHeader(header.Key, header.Value);
                 }
-
-                message.SetHeader(header.Key, header.Value);
             }
 
             bool ShouldInclude(string name) {

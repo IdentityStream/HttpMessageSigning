@@ -7,21 +7,14 @@ namespace IdentityStream.HttpMessageSigning {
     /// An immutable per-request signing configuration.
     /// </summary>
     internal class RequestHttpMessageSigningConfiguration {
-        private RequestHttpMessageSigningConfiguration(
-            string keyId,
-            ISignatureAlgorithm signatureAlgorithm,
-            HashAlgorithmName? digestAlgorithm,
-            Func<DateTimeOffset> getCurrentTimestamp,
-            IImmutableSet<string> headersToInclude,
-            TimeSpan? expires,
-            IImmutableDictionary<string, string> headerValues) {
-            KeyId = keyId;
-            SignatureAlgorithm = signatureAlgorithm;
-            DigestAlgorithm = digestAlgorithm;
-            GetCurrentTimestamp = getCurrentTimestamp;
-            HeadersToInclude = headersToInclude;
-            Expires = expires;
-            HeaderValues = headerValues;
+        public RequestHttpMessageSigningConfiguration(HttpMessageSigningConfiguration config, IHttpMessage message) {
+            KeyId = config.KeyId;
+            SignatureAlgorithm = config.SignatureAlgorithm;
+            DigestAlgorithm = config.DigestAlgorithm;
+            GetCurrentTimestamp = config.GetCurrentTimestamp;
+            HeadersToInclude = GetHeadersToInclude(config, message);
+            Expires = config.Expires;
+            HeaderValues = config.HeaderValues.ToImmutableDictionary();
         }
 
         public string KeyId { get; }
@@ -38,18 +31,7 @@ namespace IdentityStream.HttpMessageSigning {
 
         public IImmutableDictionary<string, string> HeaderValues { get; }
 
-        public static RequestHttpMessageSigningConfiguration Create(HttpMessageSigningConfiguration config, IHttpMessage message) {
-            return new RequestHttpMessageSigningConfiguration(
-                config.KeyId,
-                config.SignatureAlgorithm,
-                config.DigestAlgorithm,
-                config.GetCurrentTimestamp,
-                GetRequestHeadersToInclude(config, message),
-                config.Expires,
-                config.HeaderValues.ToImmutableDictionary());
-        }
-
-        private static IImmutableSet<string> GetRequestHeadersToInclude(HttpMessageSigningConfiguration config, IHttpMessage message) {
+        private static IImmutableSet<string> GetHeadersToInclude(HttpMessageSigningConfiguration config, IHttpMessage message) {
             var headersToInclude = ImmutableSortedSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
 
             foreach (var header in config.HeadersToInclude) {
@@ -75,7 +57,7 @@ namespace IdentityStream.HttpMessageSigning {
                 headersToInclude.Add(HeaderNames.Expires);
             }
 
-            if (message.Content == null) {
+            if (message.Content is null) {
                 headersToInclude.Remove(HeaderNames.Digest);
             } else if (config.DigestAlgorithm.HasValue) {
                 headersToInclude.Add(HeaderNames.Digest);
