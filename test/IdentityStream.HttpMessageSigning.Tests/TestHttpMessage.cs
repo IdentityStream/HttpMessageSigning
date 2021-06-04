@@ -10,7 +10,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             RequestUri = requestUri;
             Content = content;
             Headers = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
-            Properties = new Dictionary<string, string>();
+            Properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public HttpMethod Method { get; }
