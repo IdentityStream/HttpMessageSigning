@@ -29,7 +29,7 @@ var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
 client.Endpoint.UseHttpMessageSigning("key-id", signatureAlgorithm);
 ```
-<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L15-L21' title='Snippet source file'>snippet source</a> | <a href='#snippet-usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L14-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 There's also a bunch of convenience overloads for working with `X509Certificate2`, which will automatically

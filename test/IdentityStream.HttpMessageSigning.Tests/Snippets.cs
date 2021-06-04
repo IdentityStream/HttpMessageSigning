@@ -4,7 +4,6 @@ using IdentityStream.HttpMessageSigning.ServiceModel;
 
 namespace IdentityStream.HttpMessageSigning.Tests {
     public class Snippets {
-
         //Fake endpoint for snippet purposes
         public class TheEndpointClient : ClientBase<string> {
             public TheEndpointClient(BasicHttpsBinding binding, EndpointAddress remoteAddress) {
