@@ -12,8 +12,8 @@ namespace IdentityStream.HttpMessageSigning {
             SignatureAlgorithm = signatureAlgorithm;
             GetCurrentTimestamp = () => DateTimeOffset.UtcNow;
             HeadersToInclude = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-            AddRecommendedHeaders = true;
             HeaderValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            AddRecommendedHeaders = true;
         }
 
         /// <summary>
@@ -99,10 +99,6 @@ namespace IdentityStream.HttpMessageSigning {
 
             configure?.Invoke(config);
 
-            if (config.AddRecommendedHeaders) {
-                EnsureRecommendedHeaders(config);
-            }
-
             Validate(config);
 
             return config;
@@ -120,30 +116,13 @@ namespace IdentityStream.HttpMessageSigning {
             if (config.GetCurrentTimestamp is null) {
                 throw new InvalidOperationException($"{nameof(GetCurrentTimestamp)} is required.");
             }
-        }
 
-        private static void EnsureRecommendedHeaders(HttpMessageSigningConfiguration config) {
-            // According to the spec, the (request-target) header should always be part of the signature string.
-            config.HeadersToInclude.Add(HeaderNames.RequestTarget);
-
-            // According to the spec, the Date header SHOULD be included when the algorithm starts with 'rsa', 'hmac' or 'ecdsa'.
-            if (config.SignatureAlgorithm.ShouldIncludeDateHeader()) {
-                config.HeadersToInclude.Add(HeaderNames.Date);
+            if (config.HeadersToInclude.Contains(HeaderNames.Digest) && !config.DigestAlgorithm.HasValue) {
+                throw new InvalidOperationException($"{nameof(DigestAlgorithm)} must be set when the {HeaderNames.Digest} header is included.");
             }
 
-            // According to the spec, the (created) header SHOULD be included when the algorithm does not start with 'rsa', 'hmac' or 'ecdsa'.
-            if (config.SignatureAlgorithm.ShouldIncludeCreatedHeader()) {
-                config.HeadersToInclude.Add(HeaderNames.Created);
-            }
-
-            // Include the (expires) header in the signature string if it's been enabled.
-            if (config.Expires.HasValue) {
-                config.HeadersToInclude.Add(HeaderNames.Expires);
-            }
-
-            // Include the Digest header in the signature string if it's been enabled.
-            if (config.DigestAlgorithm.HasValue) {
-                config.HeadersToInclude.Add(HeaderNames.Digest);
+            if (config.HeadersToInclude.Contains(HeaderNames.Expires) && !config.Expires.HasValue) {
+                throw new InvalidOperationException($"{nameof(Expires)} must be set when the {HeaderNames.Expires} header is included.");
             }
         }
     }

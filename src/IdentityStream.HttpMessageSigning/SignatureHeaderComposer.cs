@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IdentityStream.HttpMessageSigning {
     internal static class SignatureHeaderComposer {
-        public static string Compose(string signatureString, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
+        public static string Compose(string signatureString, RequestHttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
             var builder = new StringBuilder();
 
             builder.Append("keyId=");

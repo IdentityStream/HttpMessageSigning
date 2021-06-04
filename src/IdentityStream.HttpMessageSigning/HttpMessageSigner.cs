@@ -12,14 +12,16 @@ namespace IdentityStream.HttpMessageSigning {
         /// <param name="message">The HTTP message to sign.</param>
         /// <param name="config">The configuration to use when signing.</param>
         public static async Task SignAsync(IHttpMessage message, HttpMessageSigningConfiguration config) {
-            var timestamp = config.GetCurrentTimestamp();
+            var requestConfig = RequestHttpMessageSigningConfiguration.Create(config, message);
 
-            await AddRequiredHeaders(message, config, timestamp).ConfigureAwait(false);
+            var timestamp = requestConfig.GetCurrentTimestamp();
 
-            AddSignatureHeader(message, config, timestamp);
+            await AddRequiredHeaders(message, requestConfig, timestamp).ConfigureAwait(false);
+
+            AddSignatureHeader(message, requestConfig, timestamp);
         }
 
-        private static async Task AddRequiredHeaders(IHttpMessage message, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
+        private static async Task AddRequiredHeaders(IHttpMessage message, RequestHttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
             if (ShouldInclude(HeaderNames.Date)) {
                 message.SetHeader(HeaderNames.Date, timestamp.ToString("R"));
             }
@@ -32,8 +34,8 @@ namespace IdentityStream.HttpMessageSigning {
                         UriComponents.Host, UriFormat.Unescaped));
             }
 
-            if (ShouldInclude(HeaderNames.Digest) && config.DigestAlgorithm.HasValue) {
-                var digestHeaderValue = await message.GetDigestHeaderValues(config.DigestAlgorithm.Value).ConfigureAwait(false);
+            if (ShouldInclude(HeaderNames.Digest) && config.DigestAlgorithm.HasValue && message.Content != null) {
+                var digestHeaderValue = await message.Content.GetDigestHeaderValues(config.DigestAlgorithm.Value).ConfigureAwait(false);
                 message.SetHeader(HeaderNames.Digest, digestHeaderValue);
             }
 
@@ -52,7 +54,7 @@ namespace IdentityStream.HttpMessageSigning {
             }
         }
 
-        private static void AddSignatureHeader(IHttpMessage message, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
+        private static void AddSignatureHeader(IHttpMessage message, RequestHttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
             var signingString = SigningStringComposer.Compose(message, config, timestamp);
 
             // Add the signing string to the request so it can be inspected later :)

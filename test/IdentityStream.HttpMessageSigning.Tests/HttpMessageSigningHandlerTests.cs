@@ -27,7 +27,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             using var client = new HttpClient(handler);
 
-            await client.GetAsync("https://identitystream.com/hello");
+            await client.PostAsync("https://identitystream.com/hello", new StringContent("hello"));
 
             var request = recorder.Requests.Single();
 

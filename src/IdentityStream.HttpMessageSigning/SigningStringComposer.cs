@@ -6,13 +6,13 @@ namespace IdentityStream.HttpMessageSigning {
     internal static class SigningStringComposer {
         private static readonly char[] SplitValues = { '\n' };
 
-        public static string Compose(IHttpMessage message, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) =>
+        public static string Compose(IHttpMessage message, RequestHttpMessageSigningConfiguration config, DateTimeOffset timestamp) =>
             config.HeadersToInclude
                 .Aggregate(new StringBuilder(), (builder, headerName) =>
                     builder.IncludeHeader(headerName, message, config, timestamp))
                         .ToString().Trim();
 
-        private static StringBuilder IncludeHeader(this StringBuilder builder, string headerName, IHttpMessage message, HttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
+        private static StringBuilder IncludeHeader(this StringBuilder builder, string headerName, IHttpMessage message, RequestHttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
             if (string.Equals(headerName, HeaderNames.RequestTarget)) {
                 return builder.AppendRequestTargetHeader(message);
             }
