@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -9,31 +8,37 @@ namespace IdentityStream.HttpMessageSigning {
             var builder = new StringBuilder();
 
             builder.Append("keyId=");
-            builder.Append(config.KeyId);
+            builder.AppendQuoted(config.KeyId);
 
             builder.Append(",algorithm=");
-            builder.Append(config.SignatureAlgorithm.GetAlgorithmName());
+            builder.AppendQuoted(config.SignatureAlgorithm.GetAlgorithmName());
 
             builder.Append(",created=");
-            builder.Append(timestamp.ToUnixTimeSeconds().ToString());
+            builder.AppendQuoted(GetTimestampString(timestamp));
 
             if (config.Expires.HasValue) {
                 builder.Append(",expires=");
-                builder.Append(timestamp.Add(config.Expires.Value).ToUnixTimeSeconds().ToString());
+                builder.AppendQuoted(GetTimestampString(timestamp.Add(config.Expires.Value)));
             }
 
             if (config.HeadersToInclude.Count > 0) {
                 builder.Append(",headers=");
-                builder.AppendJoin(" ", config.HeadersToInclude.Select(x => x.ToLowerInvariant()));
+                builder.AppendQuoted(GetHeaderString(config));
             }
 
             builder.Append(",signature=");
-            builder.Append(signatureString);
+            builder.AppendQuoted(signatureString);
 
             return builder.ToString();
         }
 
-        private static StringBuilder AppendJoin<T>(this StringBuilder builder, string separator, IEnumerable<T> values) =>
-            builder.Append(string.Join(separator, values));
+        private static string GetTimestampString(DateTimeOffset timestamp) =>
+            timestamp.ToUnixTimeSeconds().ToString();
+
+        private static string GetHeaderString(RequestHttpMessageSigningConfiguration config) =>
+            string.Join(" ", config.HeadersToInclude.Select(x => x.ToLowerInvariant()));
+
+        private static StringBuilder AppendQuoted(this StringBuilder builder, string value) =>
+            builder.Append('"').Append(value).Append('"');
     }
 }

@@ -16,7 +16,7 @@ namespace IdentityStream.HttpMessageSigning {
         /// <param name="config">The configuration to use when signing HTTP requests.</param>
         /// <exception cref="InvalidOperationException">Thrown if <paramref name="config"/> is invalid.</exception>
         public SigningHttpMessageHandler(HttpMessageSigningConfiguration config)
-            : this (config, new HttpClientHandler()) {
+            : this(config, new HttpClientHandler()) {
         }
 
         /// <summary>
