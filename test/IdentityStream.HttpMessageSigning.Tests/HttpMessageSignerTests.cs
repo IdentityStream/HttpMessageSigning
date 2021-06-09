@@ -17,7 +17,9 @@ namespace IdentityStream.HttpMessageSigning.Tests {
         public async Task DefaultConfiguration_ProducesCorrectSignatureHeader() {
             var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
 
-            await SignAsync(message);
+            await SignAsync(message, config => {
+                config.AddRecommendedHeaders = true;
+            });
 
             await VerifySignatureHeader(message);
         }
@@ -26,9 +28,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
         public async Task AddRecommendedHeaders_False_DoesNotIncludeAnyHeaders() {
             var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
 
-            await SignAsync(message, config => {
-                config.AddRecommendedHeaders = false;
-            });
+            await SignAsync(message);
 
             await VerifySignatureHeader(message);
         }
@@ -44,7 +44,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             await SignAsync(message, config => {
                 config.HeadersToInclude.Add("X-Custom-Header");
                 config.AddHeaderValue("X-Other-Header", "Value");
-                config.AddRecommendedHeaders = false;
             });
 
             Assert.Equal("Value", message.Headers["X-Other-Header"].Single());
@@ -58,8 +57,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             await SignAsync(message, config => {
                 config.DigestAlgorithm = HashAlgorithmName.SHA512;
-                config.HeadersToInclude.Add(HeaderNames.Digest);
-                config.AddRecommendedHeaders = false;
             });
 
             await VerifySignatureHeader(message);
@@ -72,8 +69,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             await SignAsync(message, config => {
                 config.DigestAlgorithm = digestAlgorithm;
-                config.HeadersToInclude.Add(HeaderNames.Digest);
-                config.AddRecommendedHeaders = false;
             });
 
             await Verify(message.Headers[HeaderNames.Digest].Single())
@@ -93,9 +88,18 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
 
             await SignAsync(message, config => {
-                config.HeadersToInclude.Add(HeaderNames.Expires);
                 config.Expires = TimeSpan.FromMinutes(10);
-                config.AddRecommendedHeaders = false;
+            });
+
+            await VerifySignatureHeader(message);
+        }
+
+        [Fact]
+        public async Task Created_IsIncluded_WhenEnabled() {
+            var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
+
+            await SignAsync(message, config => {
+                config.HeadersToInclude.Add(HeaderNames.Created);
             });
 
             await VerifySignatureHeader(message);
@@ -108,7 +112,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             await SignAsync(message, config => {
                 config.HeadersToInclude.Add(HeaderNames.Host);
-                config.AddRecommendedHeaders = false;
             });
 
             Assert.Equal("identitystream.com", message.Headers[HeaderNames.Host].Single());
@@ -120,7 +123,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => SignAsync(message, config => {
                 config.HeadersToInclude.Add("X-Missing-Header");
-                config.AddRecommendedHeaders = false;
             }));
         }
 
@@ -137,6 +139,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             var signatureAlgorithm = new TestSignatureAlgorithm(HashAlgorithmName.SHA512);
             var config = new HttpMessageSigningConfiguration(KeyId, signatureAlgorithm) {
                 GetCurrentTimestamp = () => new DateTimeOffset(2021, 05, 27, 10, 23, 00, TimeSpan.Zero),
+                AddRecommendedHeaders = false,
             };
             configure?.Invoke(config);
             return HttpMessageSigner.SignAsync(message, config);

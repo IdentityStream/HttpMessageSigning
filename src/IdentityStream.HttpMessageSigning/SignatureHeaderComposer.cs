@@ -13,8 +13,10 @@ namespace IdentityStream.HttpMessageSigning {
             builder.Append(",algorithm=");
             builder.AppendQuoted(config.SignatureAlgorithm.GetAlgorithmName());
 
-            builder.Append(",created=");
-            builder.AppendQuoted(GetTimestampString(timestamp));
+            if (config.HeadersToInclude.Contains(HeaderNames.Created)) {
+                builder.Append(",created=");
+                builder.AppendQuoted(GetTimestampString(timestamp));
+            }
 
             if (config.Expires.HasValue) {
                 builder.Append(",expires=");
