@@ -15,8 +15,8 @@ namespace IdentityStream.HttpMessageSigning {
         /// </summary>
         /// <param name="config">The configuration to use when signing HTTP requests.</param>
         /// <exception cref="InvalidOperationException">Thrown if <paramref name="config"/> is invalid.</exception>
-        public SigningHttpMessageHandler(HttpMessageSigningConfiguration config) {
-            Config = config?.Validate() ?? throw new ArgumentNullException(nameof(config));
+        public SigningHttpMessageHandler(HttpMessageSigningConfiguration config)
+            : this (config, new HttpClientHandler()) {
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace IdentityStream.HttpMessageSigning {
         /// <param name="innerHandler">The inner handler which is responsible for processing the HTTP response messages.</param>
         public SigningHttpMessageHandler(HttpMessageSigningConfiguration config, HttpMessageHandler innerHandler)
             : base(innerHandler) {
-            Config = config;
+            Config = config?.Validate() ?? throw new ArgumentNullException(nameof(config));
         }
 
         private HttpMessageSigningConfiguration Config { get; }
