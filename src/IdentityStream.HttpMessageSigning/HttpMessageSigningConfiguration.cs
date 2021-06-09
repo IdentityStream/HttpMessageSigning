@@ -18,7 +18,7 @@ namespace IdentityStream.HttpMessageSigning {
             SignatureAlgorithm = signatureAlgorithm ?? throw new ArgumentNullException(nameof(signatureAlgorithm));
             GetCurrentTimestamp = () => DateTimeOffset.UtcNow;
             HeadersToInclude = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
-            HeaderValues = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            HeaderValues = new Dictionary<string, Func<IHttpMessage, string>>(StringComparer.OrdinalIgnoreCase);
             AddRecommendedHeaders = true;
         }
 
@@ -59,17 +59,23 @@ namespace IdentityStream.HttpMessageSigning {
         /// </summary>
         public TimeSpan? Expires { get; set; }
 
-        internal Dictionary<string, string> HeaderValues { get; }
+        internal Dictionary<string, Func<IHttpMessage, string>> HeaderValues { get; }
 
         /// <summary>
         /// Adds a header value to all signed requests and includes it in the signature.
         /// </summary>
         /// <param name="name">The header name.</param>
         /// <param name="value">The header value to include.</param>
-        public void AddHeaderValue(string name, string value)
-        {
+        public void AddHeaderValue(string name, string value) => AddHeaderValue(name, _ => value);
+
+        /// <summary>
+        /// Adds a header value using the provided <paramref name="getter"/> to all signed requests and includes it in the signature.
+        /// </summary>
+        /// <param name="name">The header name.</param>
+        /// <param name="getter">The header value getter to include.</param>
+        public void AddHeaderValue(string name, Func<IHttpMessage, string> getter) {
             HeadersToInclude.Add(name);
-            HeaderValues[name] = value;
+            HeaderValues[name] = getter;
         }
 
         /// <summary>

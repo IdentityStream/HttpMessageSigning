@@ -44,7 +44,7 @@ namespace IdentityStream.HttpMessageSigning {
             foreach (var header in config.HeaderValues)
             {
                 if (ShouldInclude(header.Key)) {
-                    message.SetHeader(header.Key, header.Value);
+                    message.SetHeader(header.Key, header.Value(message));
                 }
             }
 

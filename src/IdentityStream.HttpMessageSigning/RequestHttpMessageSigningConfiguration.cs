@@ -29,7 +29,7 @@ namespace IdentityStream.HttpMessageSigning {
 
         public TimeSpan? Expires { get; }
 
-        public IImmutableDictionary<string, string> HeaderValues { get; }
+        public IImmutableDictionary<string, Func<IHttpMessage, string>> HeaderValues { get; }
 
         private static IImmutableSet<string> GetHeadersToInclude(HttpMessageSigningConfiguration config, IHttpMessage message) {
             var headersToInclude = ImmutableSortedSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
