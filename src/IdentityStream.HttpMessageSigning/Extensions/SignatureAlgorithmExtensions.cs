@@ -14,7 +14,7 @@ namespace IdentityStream.HttpMessageSigning {
 
         public static string GetAlgorithmName(this ISignatureAlgorithm algorithm) {
             var signatureAlgorithmName = algorithm.Name.ToLowerInvariant();
-            var hashAlgorithmName = algorithm.HashAlgorithm.Name.ToLowerInvariant();
+            var hashAlgorithmName = algorithm.HashAlgorithm.Name!.ToLowerInvariant();
             return $"{signatureAlgorithmName}-{hashAlgorithmName}";
         }
     }

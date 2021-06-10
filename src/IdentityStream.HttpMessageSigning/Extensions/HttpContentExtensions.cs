@@ -12,7 +12,7 @@ namespace IdentityStream.HttpMessageSigning {
 
             var bytes = await content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-            using var hashAlgorithm = HashAlgorithm.Create(digestAlgorithm.Name);
+            using var hashAlgorithm = HashAlgorithm.Create(digestAlgorithm.Name!);
             if (hashAlgorithm is null) {
                 throw new InvalidOperationException($"Invalid digest algorithm: {digestAlgorithm.Name}");
             }
@@ -30,7 +30,7 @@ namespace IdentityStream.HttpMessageSigning {
                 "SHA384" => "SHA-384",
                 "SHA512" => "SHA-512",
                 "SHA1" => "SHA-1",
-                _ => name.Name,
+                _ => name.Name!,
             };
     }
 }

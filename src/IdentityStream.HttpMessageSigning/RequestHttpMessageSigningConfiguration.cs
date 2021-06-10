@@ -32,7 +32,7 @@ namespace IdentityStream.HttpMessageSigning {
         public IImmutableDictionary<string, Func<IHttpMessage, string>> HeaderValues { get; }
 
         private static IImmutableSet<string> GetHeadersToInclude(HttpMessageSigningConfiguration config, IHttpMessage message) {
-            var headersToInclude = ImmutableSortedSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
+            var headersToInclude = ImmutableSortedSet.CreateBuilder<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var header in config.HeadersToInclude) {
                 headersToInclude.Add(header);

@@ -50,7 +50,7 @@ namespace IdentityStream.HttpMessageSigning {
 
             public HttpMethod Method => Request.Method;
 
-            public Uri RequestUri => Request.RequestUri;
+            public Uri RequestUri => Request.RequestUri!;
 
             private HttpRequestMessage Request { get; }
 
@@ -61,7 +61,11 @@ namespace IdentityStream.HttpMessageSigning {
                 Request.Headers.TryGetValues(name, out values);
 
             public void SetProperty(string name, string value) =>
+#if NETSTANDARD2_0
                 Request.Properties[name] = value;
+#else
+                Request.Options.Set(new HttpRequestOptionsKey<string>(name), value);
+#endif
         }
     }
 }

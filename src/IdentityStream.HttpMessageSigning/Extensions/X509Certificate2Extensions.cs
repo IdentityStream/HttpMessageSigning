@@ -53,6 +53,7 @@ namespace IdentityStream.HttpMessageSigning {
         }
 
         private static string ToHexString(this byte[] bytes, int offset, int length) {
+#if NETSTANDARD2_0
             var builder = new StringBuilder(capacity: bytes.Length * 2);
 
             for (int i = 0; i < length; i++) {
@@ -60,6 +61,16 @@ namespace IdentityStream.HttpMessageSigning {
             }
 
             return builder.ToString();
+#else
+            return Convert.ToHexString(bytes, offset, length);
+#endif
         }
+
+#if NETSTANDARD2_0
+        private static byte[] GetCertHash(this X509Certificate2 certificate, HashAlgorithmName hashAlgorithm) {
+            using var hasher = HashAlgorithm.Create(hashAlgorithm.Name);
+            return hasher.ComputeHash(certificate.GetRawCertData());
+        }
+#endif
     }
 }
