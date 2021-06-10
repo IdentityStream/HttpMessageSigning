@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -49,11 +48,15 @@ namespace IdentityStream.HttpMessageSigning {
         /// <param name="certificate">The certificate to get the key ID for.</param>
         /// <returns>The key ID to be used when signing requests.</returns>
         public static string GetKeyId(this X509Certificate2 certificate) {
-            var hash = certificate.GetCertHash();
-            var builder = new StringBuilder();
+            var hash = certificate.GetCertHash(HashAlgorithmName.SHA256);
+            return hash.ToHexString(hash.Length - KeyIdLength, KeyIdLength);
+        }
 
-            foreach (var @byte in hash.Skip(hash.Length - KeyIdLength)) {
-                builder.Append(@byte.ToString("x2"));
+        private static string ToHexString(this byte[] bytes, int offset, int length) {
+            var builder = new StringBuilder(capacity: bytes.Length * 2);
+
+            for (int i = 0; i < length; i++) {
+                builder.Append(bytes[offset + i].ToString("x2"));
             }
 
             return builder.ToString();

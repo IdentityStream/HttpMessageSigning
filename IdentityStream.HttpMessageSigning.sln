@@ -8,9 +8,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityStream.HttpMessageSigning.Tests", "test\IdentityStream.HttpMessageSigning.Tests\IdentityStream.HttpMessageSigning.Tests.csproj", "{C7A49C51-D781-499A-9ED9-4FB792DE8F54}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D0F60E24-8C58-4CC4-ADEF-AD578ABF8CDB}"
-ProjectSection(SolutionItems) = preProject
-	src\Directory.Build.props = src\Directory.Build.props
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F982A115-4CEF-4D3E-8906-DA38AF6A4398}"
 EndProject
