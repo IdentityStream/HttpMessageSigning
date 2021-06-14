@@ -15,12 +15,12 @@ namespace IdentityStream.HttpMessageSigning {
 
             if (config.HeadersToInclude.Contains(HeaderNames.Created)) {
                 builder.Append(",created=");
-                builder.AppendQuoted(GetTimestampString(timestamp));
+                builder.Append(GetTimestampString(timestamp));
             }
 
             if (config.Expires.HasValue) {
                 builder.Append(",expires=");
-                builder.AppendQuoted(GetTimestampString(timestamp.Add(config.Expires.Value)));
+                builder.Append(GetTimestampString(timestamp.Add(config.Expires.Value)));
             }
 
             if (config.HeadersToInclude.Count > 0) {
