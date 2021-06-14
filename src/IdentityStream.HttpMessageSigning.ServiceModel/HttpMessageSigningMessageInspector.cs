@@ -16,9 +16,7 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
     /// A WCF message inspector that signs HTTP requests before they're sent.
     /// </summary>
     public class HttpMessageSigningMessageInspector : IClientMessageInspector {
-        private static readonly XmlWriterSettings Settings = new() {
-            Encoding = Encoding.UTF8
-        };
+        private static readonly Encoding UTF8NoBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
         /// <summary>
         /// Creates a new inspector instance using the specified <paramref name="config"/>.
@@ -62,18 +60,24 @@ namespace IdentityStream.HttpMessageSigning.ServiceModel {
 
         private static byte[] ReadRequestBody(ref Message message) {
             using var stream = new MemoryStream();
-            using var writer = XmlWriter.Create(stream, Settings);
+            using var writer = XmlDictionaryWriter.CreateTextWriter(stream, UTF8NoBom);
 
             var buffer = message.CreateBufferedCopy(int.MaxValue);
 
             message = buffer.CreateMessage();
+
+            // Because in some cases, WCF will remove the Action header and
+            // replace it with a SOAPAction HTTP header later in the pipeline
+            // (at the transport layer?), we remove the Action header on this
+            // message copy before writing it out to the MemoryStream. This prevents
+            // a Digest mismatch between what's calculated and what goes on the cable.
+            message.Headers.RemoveAll("Action", "http://schemas.microsoft.com/ws/2005/05/addressing/none");
 
             message.WriteMessage(writer);
 
             message = buffer.CreateMessage();
 
             writer.Flush();
-            stream.Flush();
 
             return stream.ToArray();
         }
