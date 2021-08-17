@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IdentityStream.HttpMessageSigning {
@@ -59,7 +60,8 @@ namespace IdentityStream.HttpMessageSigning {
             // Add the signing string to the request so it can be inspected later :)
             message.SetProperty(Constants.SigningString, signingString);
 
-            var signatureHash = config.SignatureAlgorithm.ComputeHash(signingString);
+            var plainBytes = Encoding.UTF8.GetBytes(signingString);
+            var signatureHash = config.SignatureAlgorithm.ComputeHash(plainBytes);
             var signatureString = Convert.ToBase64String(signatureHash);
 
             var signatureHeaderValue = SignatureHeaderComposer.Compose(signatureString, config, timestamp);

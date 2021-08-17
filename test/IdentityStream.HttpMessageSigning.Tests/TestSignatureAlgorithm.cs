@@ -12,6 +12,6 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
         public HashAlgorithmName HashAlgorithm { get; }
 
-        public byte[] ComputeHash(string value) => Encoding.UTF8.GetBytes($"signed({value})");
+        public byte[] ComputeHash(byte[] bytes) => Encoding.UTF8.GetBytes($"signed({Encoding.UTF8.GetString(bytes)})");
     }
 }

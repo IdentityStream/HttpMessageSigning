@@ -16,10 +16,10 @@ namespace IdentityStream.HttpMessageSigning {
         HashAlgorithmName HashAlgorithm { get; }
 
         /// <summary>
-        /// Computes a hash based on the specified input <paramref name="value"/>.
+        /// Computes a hash based on the specified input <paramref name="bytes"/>.
         /// </summary>
-        /// <param name="value">The value to hash.</param>
+        /// <param name="bytes">The bytes to hash.</param>
         /// <returns>Hashed bytes from the specified value.</returns>
-        byte[] ComputeHash(string value);
+        byte[] ComputeHash(byte[] bytes);
     }
 }
