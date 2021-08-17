@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Text;
 using Hasher = System.Security.Cryptography.HashAlgorithm;
 
 namespace IdentityStream.HttpMessageSigning {
     // ReSharper disable once InconsistentNaming
     internal class ECDsaSignatureAlgorithm : ISignatureAlgorithm {
-        public ECDsaSignatureAlgorithm(ECDsa? ecdsa, HashAlgorithmName hashAlgorithm) {
+        public ECDsaSignatureAlgorithm(ECDsa ecdsa, HashAlgorithmName hashAlgorithm) {
             Ecdsa = ecdsa ?? throw new ArgumentNullException(nameof(ecdsa));
             HashAlgorithm = hashAlgorithm;
         }

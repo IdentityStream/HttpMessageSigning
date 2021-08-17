@@ -24,14 +24,16 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
             await VerifySignatureHeader(message);
         }
+
         [Fact]
         public async Task HMacSigning_ProducesCorrectSignatureHeader() {
-            string secret = "TopSecret";
+            const string secret = "TopSecret";
+
             var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
+
             var hmacAlgo = SignatureAlgorithm.Create(Encoding.UTF8.GetBytes(secret), HashAlgorithmName.SHA256);
-            await SignAsync(message, config => {
-                config.AddRecommendedHeaders = true;
-            }, hmacAlgo);
+
+            await SignAsync(message, config => config.AddRecommendedHeaders = true, hmacAlgo);
 
             await VerifySignatureHeader(message);
         }

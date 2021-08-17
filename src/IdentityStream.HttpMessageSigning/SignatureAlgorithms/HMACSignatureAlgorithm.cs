@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace IdentityStream.HttpMessageSigning
-{
+namespace IdentityStream.HttpMessageSigning {
+	// ReSharper disable once InconsistentNaming
 	internal class HMACSignatureAlgorithm : ISignatureAlgorithm {
 		public HMACSignatureAlgorithm(byte[] key, HashAlgorithmName hashAlgorithm) {
+			Key = key ?? throw new ArgumentNullException(nameof(key));
 			HashAlgorithm = hashAlgorithm;
-			_key = key;
 		}
-		public string Name => "HMAC";
 
-		private byte[] _key;
+		public byte[] Key { get; }
 
 		public HashAlgorithmName HashAlgorithm { get;}
+
+		public string Name => "HMAC";
 
 		public byte[] ComputeHash(byte[] bytes) {
 			using var hmac = HMAC.Create(Name + HashAlgorithm.ToString());
 			if (hmac is null) {
 				throw new InvalidOperationException($"Invalid hash algorithm: {HashAlgorithm.Name}");
 			}
-			hmac.Key = _key;
+			hmac.Key = Key;
 			return hmac.ComputeHash(bytes);
 		}
 	}

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+#if NETSTANDARD2_0
 using System.Text;
+#endif
 
 namespace IdentityStream.HttpMessageSigning {
     /// <summary>
