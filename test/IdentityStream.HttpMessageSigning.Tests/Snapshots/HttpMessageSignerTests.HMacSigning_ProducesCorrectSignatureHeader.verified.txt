@@ -1,0 +1,1 @@
+﻿keyId="d4db0d",algorithm="hmac-sha256",headers="(request-target) date",signature="ErghAzxkXLokW5pGhADb9/rvB4ZtJbKSzbbCyOLdAsE="
