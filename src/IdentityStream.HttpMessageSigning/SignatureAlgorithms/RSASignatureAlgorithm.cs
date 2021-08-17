@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Text;
 using Hasher = System.Security.Cryptography.HashAlgorithm;
 
 namespace IdentityStream.HttpMessageSigning {
@@ -17,13 +16,12 @@ namespace IdentityStream.HttpMessageSigning {
 
         public string Name => "RSA";
 
-        public byte[] ComputeHash(string value) {
+        public byte[] ComputeHash(byte[] bytes) {
             using var hasher = Hasher.Create(HashAlgorithm.Name!);
             if (hasher is null) {
                 throw new InvalidOperationException($"Invalid hash algorithm: {HashAlgorithm.Name}");
             }
-            var plainBytes = Encoding.UTF8.GetBytes(value);
-            var hashedBytes = hasher.ComputeHash(plainBytes);
+            var hashedBytes = hasher.ComputeHash(bytes);
             return Rsa.SignHash(hashedBytes, HashAlgorithm, RSASignaturePadding.Pkcs1);
         }
     }
