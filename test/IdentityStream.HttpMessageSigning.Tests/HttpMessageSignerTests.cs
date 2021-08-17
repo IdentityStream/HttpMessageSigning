@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using VerifyTests;
 using VerifyXunit;
@@ -20,6 +21,17 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             await SignAsync(message, config => {
                 config.AddRecommendedHeaders = true;
             });
+
+            await VerifySignatureHeader(message);
+        }
+        [Fact]
+        public async Task HMacSigning_ProducesCorrectSignatureHeader() {
+            string secret = "TopSecret";
+            var message = new TestHttpMessage(HttpMethod.Post, new Uri("https://identitystream.com/hello"));
+            var hmacAlgo = SignatureAlgorithm.Create(Encoding.UTF8.GetBytes(secret), HashAlgorithmName.SHA256);
+            await SignAsync(message, config => {
+                config.AddRecommendedHeaders = true;
+            }, hmacAlgo);
 
             await VerifySignatureHeader(message);
         }
@@ -135,8 +147,8 @@ namespace IdentityStream.HttpMessageSigning.Tests {
 
         private SettingsTask Verify(string value) => Verifier.Verify(value);
 
-        private static Task SignAsync(IHttpMessage message, Action<HttpMessageSigningConfiguration>? configure = null) {
-            var signatureAlgorithm = new TestSignatureAlgorithm(HashAlgorithmName.SHA512);
+        private static Task SignAsync(IHttpMessage message, Action<HttpMessageSigningConfiguration>? configure = null, ISignatureAlgorithm? signingAlgorithm = null) {
+            var signatureAlgorithm = signingAlgorithm ?? new TestSignatureAlgorithm(HashAlgorithmName.SHA512);
             var config = new HttpMessageSigningConfiguration(KeyId, signatureAlgorithm) {
                 GetCurrentTimestamp = () => new DateTimeOffset(2021, 05, 27, 10, 23, 00, TimeSpan.Zero),
                 AddRecommendedHeaders = false,

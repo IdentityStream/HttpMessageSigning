@@ -43,5 +43,14 @@ namespace IdentityStream.HttpMessageSigning {
         /// <returns>An <see cref="ECDsa"/> signature algorithm.</returns>
         public static ISignatureAlgorithm Create(ECDsa ecdsa, HashAlgorithmName hashAlgorithm) =>
             new ECDsaSignatureAlgorithm(ecdsa, hashAlgorithm);
+
+        /// <summary>
+        /// Creates an <see cref="HMAC"/> signature algorithm using the specified <paramref name="hashAlgorithm"/>.
+        /// </summary>
+        /// <param name="key">The key used for creating the hash.</param>
+        /// <param name="hashAlgorithm">The hash algorithm to use.</param>
+        /// <returns>An <see cref="HMAC"/> signature algorithm</returns>
+        public static ISignatureAlgorithm Create(byte[] key, HashAlgorithmName hashAlgorithm) => 
+            new HMACSignatureAlgorithm(key, hashAlgorithm);
     }
 }
