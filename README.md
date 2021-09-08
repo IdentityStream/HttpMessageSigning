@@ -1,4 +1,4 @@
-# HttpMessageSigning
+# HttpMessageSigning [![NuGet Package](https://img.shields.io/nuget/v/IdentityStream.HttpMessageSigning.svg)](https://www.nuget.org/packages/IdentityStream.HttpMessageSigning)
 
 A .NET implementation of "[Signing HTTP Messages](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-12)" (Cavage, draft 12) for WCF and HttpClient.
 
