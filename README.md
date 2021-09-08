@@ -15,6 +15,7 @@ When hooking up HTTP message signing, there's a bunch of configuration options a
 | `Expires` | None | If set, enables signature expiry after the specified amount of time. |
 | `AddHeaderValue` | N/A | Adds a header with a value to all signed requests and their signatures. |
 | `AddHeaderValues` | N/A | Adds a collection of headers to all signed requests and their signatures. |
+| `RequestTargetUriFormat` | `UriFormat.Unescaped` | Gets or sets the URI format used when constructing the `(request-target)` header. |
 
 When using a certificate for signing, there's a convenience method called `HttpMessageSigningConfiguration.FromCertificate` that can be used to get a configuration with crypto settings based on the certificate.
 
