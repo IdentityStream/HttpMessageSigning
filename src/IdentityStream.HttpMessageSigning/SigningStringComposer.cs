@@ -14,7 +14,7 @@ namespace IdentityStream.HttpMessageSigning {
 
         private static StringBuilder IncludeHeader(this StringBuilder builder, string headerName, IHttpMessage message, RequestHttpMessageSigningConfiguration config, DateTimeOffset timestamp) {
             if (string.Equals(headerName, HeaderNames.RequestTarget)) {
-                return builder.AppendRequestTargetHeader(message);
+                return builder.AppendRequestTargetHeader(message, config);
             }
 
             if (string.Equals(headerName, HeaderNames.Created)) {
@@ -28,8 +28,8 @@ namespace IdentityStream.HttpMessageSigning {
             return builder.AppendDefaultHeader(message, headerName);
         }
 
-        private static StringBuilder AppendRequestTargetHeader(this StringBuilder builder, IHttpMessage message) {
-            var path = message.RequestUri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+        private static StringBuilder AppendRequestTargetHeader(this StringBuilder builder, IHttpMessage message, RequestHttpMessageSigningConfiguration config) {
+            var path = message.RequestUri.GetComponents(UriComponents.PathAndQuery, config.RequestTargetUriFormat);
             var method = message.Method.ToString().ToLowerInvariant();
             return builder.AppendHeader(HeaderNames.RequestTarget, $"{method} {path}");
         }

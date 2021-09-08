@@ -15,11 +15,14 @@ namespace IdentityStream.HttpMessageSigning {
             HeadersToInclude = GetHeadersToInclude(config, message);
             Expires = config.Expires;
             HeaderValues = config.HeaderValues.ToImmutableDictionary();
+            RequestTargetUriFormat = config.RequestTargetUriFormat;
         }
 
         public string KeyId { get; }
 
         public ISignatureAlgorithm SignatureAlgorithm { get; }
+
+        public UriFormat RequestTargetUriFormat { get; }
 
         public HashAlgorithmName? DigestAlgorithm { get; }
 

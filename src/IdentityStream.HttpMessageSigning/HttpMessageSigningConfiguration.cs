@@ -19,6 +19,7 @@ namespace IdentityStream.HttpMessageSigning {
             GetCurrentTimestamp = () => DateTimeOffset.UtcNow;
             HeadersToInclude = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
             HeaderValues = new Dictionary<string, Func<IHttpMessage, string>>(StringComparer.OrdinalIgnoreCase);
+            RequestTargetUriFormat = UriFormat.Unescaped;
             AddRecommendedHeaders = true;
         }
 
@@ -32,6 +33,11 @@ namespace IdentityStream.HttpMessageSigning {
         /// Gets or sets algorithm used to construct the signature string.
         /// </summary>
         public ISignatureAlgorithm SignatureAlgorithm { get; }
+
+        /// <summary>
+        /// Gets or sets the URI format used when constructing the <c>(request-target)</c> header.
+        /// </summary>
+        public UriFormat RequestTargetUriFormat { get; set; }
 
         /// <summary>
         /// Gets or sets the hash algorithm to produce a <c>Digest</c>
