@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+    <PackageTags>$(PackageTags);wcf;servicemodel</PackageTags>
+    <Description>A .NET implementation of "Signing HTTP Messages" (Cavage, draft 12) for System.ServiceModel (WCF).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SparebankenVest.HttpMessageSigning\SparebankenVest.HttpMessageSigning.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ServiceModel.Http" Version="4.8.1" />
+  </ItemGroup>
+</Project>

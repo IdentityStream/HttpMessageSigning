@@ -2,8 +2,8 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..\'))" />
 
   <PropertyGroup>
-    <PackageProjectUrl>https://github.com/IdentityStream-AS/HttpMessageSigning</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/IdentityStream-AS/HttpMessageSigning</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/SparebankenVest/HttpMessageSigning</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SparebankenVest/HttpMessageSigning</RepositoryUrl>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

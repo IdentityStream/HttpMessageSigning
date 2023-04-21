@@ -1,6 +1,8 @@
-# HttpMessageSigning [![NuGet Package](https://img.shields.io/nuget/v/IdentityStream.HttpMessageSigning.svg)](https://www.nuget.org/packages/IdentityStream.HttpMessageSigning)
+# SparebankenVest.HttpMessageSigning
 
 A .NET implementation of "[Signing HTTP Messages](https://datatracker.ietf.org/doc/html/draft-cavage-http-signatures-12)" (Cavage, draft 12) for WCF and HttpClient.
+
+This project is a fork of [IdentityStream.HttpMessageSigning](https://github.com/IdentityStream/HttpMessageSigning).
 
 ## Usage
 
@@ -36,7 +38,7 @@ client.UseHttpMessageSigning(config);
 
 // Make calls using client :)
 ```
-<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-wcf_endpoint_usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/SparebankenVest.HttpMessageSigning.Tests/Snippets.cs#L15-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-wcf_endpoint_usehttpmessagesigning' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ### HttpClient
@@ -56,5 +58,5 @@ using var client = new HttpClient(handler);
 
 // Make requests using client :)
 ```
-<sup><a href='/test/IdentityStream.HttpMessageSigning.Tests/Snippets.cs#L29-L39' title='Snippet source file'>snippet source</a> | <a href='#snippet-httpclient_signinghttpmessagehandler' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/SparebankenVest.HttpMessageSigning.Tests/Snippets.cs#L29-L39' title='Snippet source file'>snippet source</a> | <a href='#snippet-httpclient_signinghttpmessagehandler' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
