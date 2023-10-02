@@ -1,17 +1,18 @@
 ﻿using System.Net.Http;
 using System.Security.Cryptography;
 using System.ServiceModel;
-using IdentityStream.HttpMessageSigning.ServiceModel;
 
 namespace IdentityStream.HttpMessageSigning.Tests {
     public class Snippets {
         // Fake endpoint for snippet purposes
         public class TheEndpointClient : ClientBase<string> {
+#pragma warning disable IDE0060 // Remove unused parameter
             public TheEndpointClient(BasicHttpsBinding binding, EndpointAddress remoteAddress) {
             }
+#pragma warning restore IDE0060 // Remove unused parameter
         }
 
-        public void WCF_Client_Setup(BasicHttpsBinding binding, EndpointAddress endpointAddress, RSA rsaOrECDsaAlgorithm) {
+        public static void WCF_Client_Setup(BasicHttpsBinding binding, EndpointAddress endpointAddress, RSA rsaOrECDsaAlgorithm) {
             #region WCF_Endpoint_UseHttpMessageSigning
             var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 
@@ -25,7 +26,7 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             #endregion
         }
 
-        public void HttpClient_Setup(RSA rsaOrECDsaAlgorithm) {
+        public static void HttpClient_Setup(RSA rsaOrECDsaAlgorithm) {
             #region HttpClient_SigningHttpMessageHandler
             var signatureAlgorithm = SignatureAlgorithm.Create(rsaOrECDsaAlgorithm);
 

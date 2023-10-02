@@ -140,14 +140,14 @@ namespace IdentityStream.HttpMessageSigning.Tests {
             }));
         }
 
-        private Task VerifySignatureHeader(IHttpMessage message) {
+        private static Task VerifySignatureHeader(IHttpMessage message) {
             if (message.TryGetHeaderValues(HeaderNames.Signature, out var values)) {
                 return Verify(values.Single());
             }
             throw new InvalidOperationException("Could not find Signature header on request.");
         }
 
-        private SettingsTask Verify(string value) => Verifier.Verify(value);
+        private static SettingsTask Verify(string value) => Verifier.Verify(value);
 
         private static Task SignAsync(IHttpMessage message, Action<HttpMessageSigningConfiguration>? configure = null, ISignatureAlgorithm? signingAlgorithm = null) {
             var signatureAlgorithm = signingAlgorithm ?? new TestSignatureAlgorithm(HashAlgorithmName.SHA512);

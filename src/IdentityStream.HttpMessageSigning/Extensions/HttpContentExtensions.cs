@@ -12,10 +12,8 @@ namespace IdentityStream.HttpMessageSigning {
 
             var bytes = await content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-            using var hashAlgorithm = HashAlgorithm.Create(digestAlgorithm.Name!);
-            if (hashAlgorithm is null) {
-                throw new InvalidOperationException($"Invalid digest algorithm: {digestAlgorithm.Name}");
-            }
+            using var hashAlgorithm = HashAlgorithm.Create(digestAlgorithm.Name!)
+                ?? throw new InvalidOperationException($"Invalid digest algorithm: {digestAlgorithm.Name}");
 
             var digestBytes = hashAlgorithm.ComputeHash(bytes);
             var digest = Convert.ToBase64String(digestBytes);

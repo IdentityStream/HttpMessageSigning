@@ -17,10 +17,8 @@ namespace IdentityStream.HttpMessageSigning {
         public string Name => "RSA";
 
         public byte[] ComputeHash(byte[] bytes) {
-            using var hasher = Hasher.Create(HashAlgorithm.Name!);
-            if (hasher is null) {
-                throw new InvalidOperationException($"Invalid hash algorithm: {HashAlgorithm.Name}");
-            }
+            using var hasher = Hasher.Create(HashAlgorithm.Name!)
+                ?? throw new InvalidOperationException($"Invalid hash algorithm: {HashAlgorithm.Name}");
             var hashedBytes = hasher.ComputeHash(bytes);
             return Rsa.SignHash(hashedBytes, HashAlgorithm, RSASignaturePadding.Pkcs1);
         }
