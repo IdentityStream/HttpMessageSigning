@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
 using VerifyTests;
+using VerifyXunit;
 
 namespace IdentityStream.HttpMessageSigning.Tests
 {
@@ -8,7 +9,7 @@ namespace IdentityStream.HttpMessageSigning.Tests
         [ModuleInitializer]
         public static void Initialize() {
             var directory = Path.Combine(AttributeReader.GetProjectDirectory(), "Snapshots");
-            VerifierSettings.DerivePathInfo((_, _, type, method) => new(directory, type.Name, method.Name));
+            Verifier.DerivePathInfo((_, _, type, method) => new(directory, type.Name, method.Name));
         }
     }
 }
