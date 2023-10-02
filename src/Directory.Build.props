@@ -14,7 +14,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <RepositoryType>git</RepositoryType>
 
-    <MinVerDefaultPreReleasePhase>beta</MinVerDefaultPreReleasePhase>
+    <MinVerDefaultPreReleaseIdentifiers>beta.0</MinVerDefaultPreReleaseIdentifiers>
     <MinVerTagPrefix>v</MinVerTagPrefix>
 
     <PackageTags>http;message;signing;signature</PackageTags>
