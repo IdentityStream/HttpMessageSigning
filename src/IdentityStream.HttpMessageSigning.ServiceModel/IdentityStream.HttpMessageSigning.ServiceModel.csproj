@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <PackageTags>$(PackageTags);wcf;servicemodel</PackageTags>
     <Description>A .NET implementation of "Signing HTTP Messages" (Cavage, draft 12) for System.ServiceModel (WCF).</Description>
   </PropertyGroup>
@@ -10,10 +10,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.ServiceModel.Http" Version="4.10.2" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.10.3" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="System.ServiceModel.Http" Version="6.0.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="System.ServiceModel.Http" Version="6.2.0" />
   </ItemGroup>
 </Project>
