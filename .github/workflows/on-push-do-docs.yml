@@ -5,12 +5,14 @@ jobs:
   docs:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
       - name: Run MarkdownSnippets
         run: |
           dotnet tool install --global MarkdownSnippets.Tool
           mdsnippets ${GITHUB_WORKSPACE}
         shell: bash
+
       - name: Push changes
         run: |
           git config --local user.email "action@github.com"
