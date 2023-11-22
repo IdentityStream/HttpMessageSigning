@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using Hasher = System.Security.Cryptography.HashAlgorithm;
 
 namespace IdentityStream.HttpMessageSigning {
     // ReSharper disable once InconsistentNaming
@@ -17,8 +16,7 @@ namespace IdentityStream.HttpMessageSigning {
         public string Name => "ECDsa";
 
         public byte[] ComputeHash(byte[] bytes) {
-            using var hasher = Hasher.Create(HashAlgorithm.Name!)
-                ?? throw new InvalidOperationException($"Invalid hash algorithm: {HashAlgorithm.Name}");
+            using var hasher = Hasher.GetSha(HashAlgorithm);
             var hashedBytes = hasher.ComputeHash(bytes);
             return Ecdsa.SignHash(hashedBytes);
         }

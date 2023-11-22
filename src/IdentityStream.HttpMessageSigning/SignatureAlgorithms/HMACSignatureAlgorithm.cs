@@ -16,9 +16,7 @@ namespace IdentityStream.HttpMessageSigning {
 		public string Name => "HMAC";
 
 		public byte[] ComputeHash(byte[] bytes) {
-			using var hmac = HMAC.Create(Name + HashAlgorithm.ToString())
-				?? throw new InvalidOperationException($"Invalid hash algorithm: {HashAlgorithm.Name}");
-            hmac.Key = Key;
+			using var hmac = Hasher.GetHmac(HashAlgorithm, Key);
 			return hmac.ComputeHash(bytes);
 		}
 	}
