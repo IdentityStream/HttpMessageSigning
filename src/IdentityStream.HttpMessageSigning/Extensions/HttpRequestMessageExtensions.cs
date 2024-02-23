@@ -29,8 +29,15 @@ namespace System.Net.Http {
 
             private HttpRequestMessage Request { get; }
 
-            public void SetHeader(string name, string value) =>
+            public void SetHeader(string name, string value)
+            {
+                if (Request.Headers.Contains(name))
+                {
+                    Request.Headers.Remove(name);
+                }
+                
                 Request.Headers.TryAddWithoutValidation(name, value);
+            }
 
             public bool TryGetHeaderValues(string name, [NotNullWhen(true)] out IEnumerable<string>? values) =>
                 Request.Headers.TryGetValues(name, out values);
